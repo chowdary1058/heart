@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto w-full animate-fade-in-up py-4">
+
+    <!-- Top Action Bar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+        <a href="{{ url_for('dashboard') }}" class="inline-flex items-center text-sm font-bold text-slate-600 hover:text-teal-700 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition group">
+            <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-teal-600"></i> Back to Dashboard
+        </a>
+
+        <!-- Quick Sample Presets -->
+        <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-slate-400 mr-1">Sample Presets:</span>
+            <button type="button" onclick="fillHealthySample()" class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg transition flex items-center">
+                <i class="fa-solid fa-heart mr-1.5 text-emerald-600"></i> Healthy
+            </button>
+            <button type="button" onclick="fillRiskSample()" class="text-xs font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-lg transition flex items-center">
+                <i class="fa-solid fa-triangle-exclamation mr-1.5 text-rose-600"></i> Elevated Risk
+            </button>
+            <button type="button" onclick="clearForm()" class="text-xs font-bold text-slate-500 hover:text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-lg transition">
+                Clear
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Title -->
+    <div class="text-center mb-10">
+        <span class="inline-flex items-center px-3.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-extrabold tracking-widest uppercase mb-3">
+            <i class="fa-solid fa-clipboard-user mr-2 text-teal-600"></i> Clinical Diagnostic Entry
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Cardiac Assessment Protocol</h1>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto mt-2">Enter patient metrics into the standard 13 clinical features for automated Random Forest risk stratification.</p>
+    </div>
+
+    <form id="assessmentForm" method="POST" class="space-y-8">
+
+        <!-- 1. Patient Vitals -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+            <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-slate-100">
+                <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-sm border border-teal-100">1</div>
+                <div>
+                    <h2 class="font-extrabold text-slate-900 text-base">Patient Demographics & Resting Vitals</h2>
+                    <p class="text-xs text-slate-400">Baseline biological characteristics</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Age -->
+                <div>
+                    <label for="age" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Age (Years) <span class="text-rose-500">*</span></label>
+                    <input type="number" id="age" name="age" min="18" max="100" placeholder="e.g. 55" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                    <p class="text-[11px] text-slate-400 mt-1">Patient age in years (valid range: 18 - 100).</p>
+                </div>
+
+                <!-- Biological Sex -->
+                <div>
+                    <label for="sex" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Biological Sex <span class="text-rose-500">*</span></label>
+                    <select id="sex" name="sex" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Sex --</option>
+                        <option value="1">Male (1)</option>
+                        <option value="0">Female (0)</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">Standard clinical designation for cardiovascular modeling.</p>
+                </div>
+
+                <!-- Resting BP -->
+                <div>
+                    <label for="trestbps" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Resting Blood Pressure (mm Hg) <span class="text-rose-500">*</span></label>
+                    <input type="number" id="trestbps" name="trestbps" min="80" max="220" placeholder="e.g. 130" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                    <p class="text-[11px] text-slate-400 mt-1">Resting systolic blood pressure upon admission (80-220 mm Hg).</p>
+                </div>
+
+                <!-- Serum Cholesterol -->
+                <div>
+                    <label for="chol" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Serum Cholesterol (mg/dl) <span class="text-rose-500">*</span></label>
+                    <input type="number" id="chol" name="chol" min="100" max="600" placeholder="e.g. 230" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                    <p class="text-[11px] text-slate-400 mt-1">Total serum cholesterol level (normal: &lt; 200 mg/dl).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Cardiac Symptoms & ECG -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+            <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-slate-100">
+                <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-sm border border-teal-100">2</div>
+                <div>
+                    <h2 class="font-extrabold text-slate-900 text-base">Cardiac Symptoms & Electrocardiogram</h2>
+                    <p class="text-xs text-slate-400">Chest pain classification, fasting blood sugar, and resting ECG</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Chest Pain Type (cp) -->
+                <div>
+                    <label for="cp" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Chest Pain Type (cp) <span class="text-rose-500">*</span></label>
+                    <select id="cp" name="cp" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Chest Pain Type --</option>
+                        <option value="0">0: Typical Angina</option>
+                        <option value="1">1: Atypical Angina</option>
+                        <option value="2">2: Non-anginal Pain</option>
+                        <option value="3">3: Asymptomatic</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">Clinical chest pain classification.</p>
+                </div>
+
+                <!-- Fasting Blood Sugar (fbs) -->
+                <div>
+                    <label for="fbs" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Fasting Blood Sugar &gt; 120 mg/dl <span class="text-rose-500">*</span></label>
+                    <select id="fbs" name="fbs" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select FBS Status --</option>
+                        <option value="0">False: &le; 120 mg/dl (0)</option>
+                        <option value="1">True: &gt; 120 mg/dl (1)</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">Indicator of elevated glycemic levels / diabetic indicator.</p>
+                </div>
+
+                <!-- Resting ECG (restecg) -->
+                <div class="md:col-span-2">
+                    <label for="restecg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Resting Electrocardiographic Results <span class="text-rose-500">*</span></label>
+                    <select id="restecg" name="restecg" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Resting ECG --</option>
+                        <option value="0">0: Normal</option>
+                        <option value="1">1: ST-T Wave Abnormality (T wave inversions / ST elevation)</option>
+                        <option value="2">2: Left Ventricular Hypertrophy (Estes' criteria)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Stress Test & Cardiac Imaging -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+            <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-slate-100">
+                <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-sm border border-teal-100">3</div>
+                <div>
+                    <h2 class="font-extrabold text-slate-900 text-base">Exercise Stress Testing & Fluoroscopy</h2>
+                    <p class="text-xs text-slate-400">Heart rate dynamics, ST depression slope, and vessel visualization</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Max HR (thalach) -->
+                <div>
+                    <label for="thalach" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Maximum Heart Rate Achieved (thalach) <span class="text-rose-500">*</span></label>
+                    <input type="number" id="thalach" name="thalach" min="60" max="220" placeholder="e.g. 150" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                    <p class="text-[11px] text-slate-400 mt-1">Peak heart rate measured during treadmill stress test.</p>
+                </div>
+
+                <!-- Exercise-Induced Angina (exang) -->
+                <div>
+                    <label for="exang" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Exercise Induced Angina (exang) <span class="text-rose-500">*</span></label>
+                    <select id="exang" name="exang" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Status --</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">Presence of chest pain during exercise.</p>
+                </div>
+
+                <!-- ST Depression (oldpeak) -->
+                <div>
+                    <label for="oldpeak" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">ST Depression (oldpeak) <span class="text-rose-500">*</span></label>
+                    <input type="number" id="oldpeak" name="oldpeak" step="0.1" min="0.0" max="7.0" placeholder="e.g. 1.0" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                    <p class="text-[11px] text-slate-400 mt-1">ST depression induced by exercise relative to rest (0.0 - 7.0).</p>
+                </div>
+
+                <!-- Slope of Peak ST (slope) -->
+                <div>
+                    <label for="slope" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Slope of Peak Exercise ST Segment <span class="text-rose-500">*</span></label>
+                    <select id="slope" name="slope" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Slope --</option>
+                        <option value="0">0: Upsloping</option>
+                        <option value="1">1: Flat</option>
+                        <option value="2">2: Downsloping</option>
+                    </select>
+                </div>
+
+                <!-- Major Vessels (ca) -->
+                <div>
+                    <label for="ca" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Major Vessels Colored by Fluoroscopy (ca) <span class="text-rose-500">*</span></label>
+                    <select id="ca" name="ca" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Number of Vessels --</option>
+                        <option value="0">0 Vessels</option>
+                        <option value="1">1 Vessel</option>
+                        <option value="2">2 Vessels</option>
+                        <option value="3">3 Vessels</option>
+                        <option value="4">4 Vessels</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">Number of major coronary blood vessels visualized (0 - 4).</p>
+                </div>
+
+                <!-- Thalassemia (thal) -->
+                <div>
+                    <label for="thal" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Thalassemia Stress Status (thal) <span class="text-rose-500">*</span></label>
+                    <select id="thal" name="thal" class="input-clinical w-full px-4 py-3 rounded-xl font-semibold text-slate-800" required>
+                        <option value="" disabled selected>-- Select Thalassemia Status --</option>
+                        <option value="0">0: Null / Undefined</option>
+                        <option value="1">1: Fixed Defect</option>
+                        <option value="2">2: Normal Flow</option>
+                        <option value="3">3: Reversible Defect</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center pt-4">
+            <button type="submit" class="w-full sm:w-auto min-w-[320px] gradient-teal text-white py-4 px-10 rounded-2xl font-bold text-lg shadow-xl shadow-teal-700/25 hover:shadow-2xl hover:-translate-y-0.5 transition flex items-center justify-center mx-auto">
+                <i class="fa-solid fa-heart-pulse mr-3 text-xl animate-heartbeat"></i> Run Random Forest Assessment
+            </button>
+            <p class="text-xs text-slate-400 mt-3 font-medium">Results are calculated instantaneously using the validated clinical model.</p>
+        </div>
+
+    </form>
+</div>
+
+<script>
+function fillHealthySample() {
+    document.getElementById('age').value = 42;
+    document.getElementById('sex').value = "0";
+    document.getElementById('trestbps').value = 115;
+    document.getElementById('chol').value = 180;
+    document.getElementById('cp').value = "2";
+    document.getElementById('fbs').value = "0";
+    document.getElementById('restecg').value = "0";
+    document.getElementById('thalach').value = 168;
+    document.getElementById('exang').value = "0";
+    document.getElementById('oldpeak').value = 0.0;
+    document.getElementById('slope').value = "2";
+    document.getElementById('ca').value = "0";
+    document.getElementById('thal').value = "2";
+}
+
+function fillRiskSample() {
+    document.getElementById('age').value = 62;
+    document.getElementById('sex').value = "1";
+    document.getElementById('trestbps').value = 152;
+    document.getElementById('chol').value = 275;
+    document.getElementById('cp').value = "0";
+    document.getElementById('fbs').value = "1";
+    document.getElementById('restecg').value = "1";
+    document.getElementById('thalach').value = 120;
+    document.getElementById('exang').value = "1";
+    document.getElementById('oldpeak').value = 2.4;
+    document.getElementById('slope').value = "1";
+    document.getElementById('ca').value = "2";
+    document.getElementById('thal').value = "3";
+}
+
+function clearForm() {
+    document.getElementById('assessmentForm').reset();
+}
+</script>
+{% endblock %}

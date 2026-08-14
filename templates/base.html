@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartCare AI | Intelligent Cardiovascular Risk Assessment</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        danger: '#f43f5e',
+                        warning: '#f59e0b',
+                        success: '#10b981'
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(15, 118, 110, 0.08)',
+                        'glass-hover': '0 16px 40px 0 rgba(15, 118, 110, 0.16)',
+                        'glow-teal': '0 0 25px rgba(20, 184, 166, 0.35)',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        heartbeat: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '14%': { transform: 'scale(1.15)' },
+                            '28%': { transform: 'scale(1)' },
+                            '42%': { transform: 'scale(1.15)' },
+                            '70%': { transform: 'scale(1)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                        'heartbeat': 'heartbeat 2s infinite ease-in-out',
+                        'pulse-slow': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(20, 184, 166, 0.05) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
+                radial-gradient(#0f766e 0.6px, transparent 0.6px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            box-shadow: 0 16px 40px -10px rgba(15, 118, 110, 0.12);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        .gradient-teal {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-clinical {
+            border: 1px solid #cbd5e1;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .input-clinical:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+            outline: none;
+        }
+
+        @media print {
+            nav, footer, .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen text-slate-800 antialiased selection:bg-brand-600 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <nav class="bg-white/85 backdrop-blur-xl border-b border-slate-200/75 sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3">
+                    <a href="{{ url_for('index') }}" class="flex items-center space-x-3 group">
+                        <div class="w-11 h-11 gradient-teal rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-700/20 group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-heart-pulse text-xl animate-heartbeat"></i>
+                        </div>
+                        <div>
+                            <span class="font-extrabold text-2xl text-slate-900 tracking-tight">HeartCare<span class="text-teal-600">.ai</span></span>
+                            <span class="block text-[10px] font-bold text-slate-400 tracking-widest uppercase -mt-1">ML Clinical Intelligence</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation Links & User Controls -->
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'admin' %}
+                            <a href="{{ url_for('admin_dashboard') }}"
+                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
+                                <i class="fa-solid fa-gauge-high mr-2 text-teal-600"></i>Dashboard
+                            </a>
+                            <a href="{{ url_for('admin_users') }}"
+                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-teal-600"></i>Patients
+                            </a>
+                            <a href="{{ url_for('admin_predictions') }}"
+                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
+                                <i class="fa-solid fa-clipboard-list mr-2 text-teal-600"></i>Audit Logs
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('dashboard') }}"
+                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition hidden sm:flex items-center">
+                                <i class="fa-solid fa-clock-rotate-left mr-2 text-teal-600"></i>My History
+                            </a>
+                            <a href="{{ url_for('assessment') }}"
+                                class="text-sm font-bold gradient-teal text-white px-5 py-2.5 rounded-xl shadow-md shadow-teal-700/20 hover:shadow-lg hover:shadow-teal-700/30 hover:-translate-y-0.5 transition flex items-center">
+                                <i class="fa-solid fa-stethoscope mr-2"></i>New Assessment
+                            </a>
+                        {% endif %}
+
+                        <div class="h-6 w-px bg-slate-200 mx-1 hidden md:block"></div>
+
+                        <!-- User Profile Badge -->
+                        <a href="{{ url_for('profile') }}"
+                            class="flex items-center font-bold text-xs md:text-sm text-slate-700 bg-slate-100 hover:bg-teal-50 hover:text-teal-800 border border-slate-200 hover:border-teal-200 px-3.5 py-2 rounded-xl transition shadow-sm"
+                            title="Profile & Settings">
+                            <div class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center mr-2 text-xs font-bold">
+                                {{ current_user.username[0]|upper }}
+                            </div>
+                            <span class="truncate max-w-[110px]">{{ current_user.username }}</span>
+                            {% if current_user.role == 'admin' %}
+                            <span class="ml-2 px-1.5 py-0.5 text-[10px] bg-indigo-100 text-indigo-700 rounded font-extrabold uppercase">Admin</span>
+                            {% endif %}
+                        </a>
+
+                        <!-- Logout -->
+                        <a href="{{ url_for('logout') }}"
+                            class="text-sm font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 p-2.5 rounded-xl transition"
+                            title="Sign Out">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </a>
+
+                    {% else %}
+                        <a href="{{ url_for('login') }}"
+                            class="text-sm font-bold text-slate-700 hover:text-teal-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition">
+                            Sign In
+                        </a>
+                        <a href="{{ url_for('register') }}"
+                            class="text-sm font-bold gradient-teal text-white px-5 py-2.5 rounded-xl shadow-md shadow-teal-700/20 hover:shadow-lg hover:-translate-y-0.5 transition">
+                            Get Started
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Alert Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-lg px-4 pointer-events-none">
+        {% for category, message in messages %}
+        {% set is_err = (category == 'error') %}
+        <div class="p-4 rounded-2xl border {{ 'bg-rose-50 border-rose-200 text-rose-900 shadow-rose-500/10' if is_err else 'bg-teal-50 border-teal-200 text-teal-900 shadow-teal-500/10' }} flex items-start shadow-xl mb-3 animate-fade-in-up pointer-events-auto backdrop-blur-md"
+            role="alert">
+            <div class="flex-shrink-0 mt-0.5">
+                <i class="fa-solid {{ 'fa-circle-exclamation text-rose-500' if is_err else 'fa-circle-check text-teal-600' }} text-lg"></i>
+            </div>
+            <div class="ml-3 w-0 flex-1 font-semibold text-sm leading-snug">
+                {{ message }}
+            </div>
+            <button onclick="this.parentElement.remove()"
+                class="ml-3 text-slate-400 hover:text-slate-600 p-1 transition rounded-lg hover:bg-white/60">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Container -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-start">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-white border-t border-slate-200/80 py-10 mt-auto z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 gradient-teal rounded-xl flex items-center justify-center text-white text-sm">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-slate-900 text-lg">HeartCare<span class="text-teal-600">.ai</span></span>
+                        <p class="text-xs text-slate-400">Random Forest Clinical Intelligence</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-6 text-sm font-semibold text-slate-500">
+                    <span class="inline-flex items-center text-xs text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full font-bold">
+                        <span class="w-2 h-2 rounded-full bg-teal-500 mr-2 animate-pulse"></span> Engine Online
+                    </span>
+                    <a href="{{ url_for('admin_login') }}" class="hover:text-teal-700 transition flex items-center">
+                        <i class="fa-solid fa-shield-halved mr-1.5 text-xs"></i>Admin Portal
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
+                <p>&copy; {{ current_year | default(2026) }} HeartCare AI System. Educational AI risk tool, not a medical diagnosis.</p>
+                <p class="mt-2 sm:mt-0 font-medium">1025-Cohort Validated Random Forest</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

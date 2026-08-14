@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Admin Navigation Tabs -->
+<div class="w-full bg-slate-900 rounded-2xl mb-8 flex items-center justify-between p-2 shadow-lg hidden md:flex">
+    <div class="flex space-x-1">
+        <a href="{{ url_for('admin_dashboard') }}"
+            class="px-5 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-sm transition-colors flex items-center">
+            <i class="fa-solid fa-chart-pie mr-2 text-teal-400"></i> Platform Analytics
+        </a>
+        <a href="{{ url_for('admin_users') }}"
+            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-bold text-sm transition-colors flex items-center">
+            <i class="fa-solid fa-users mr-2"></i> Patient Directory
+        </a>
+        <a href="{{ url_for('admin_predictions') }}"
+            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-bold text-sm transition-colors flex items-center">
+            <i class="fa-solid fa-list-check mr-2"></i> Clinical Audit Logs
+        </a>
+    </div>
+    <div class="px-4 text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
+        <i class="fa-solid fa-shield-halved mr-2 text-teal-400"></i> Admin Session
+    </div>
+</div>
+
+<!-- Header Title -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Clinical Administration Dashboard</h1>
+        <p class="text-slate-500 text-sm font-medium mt-1">Platform analytics, ML predictions, and registered cohort statistics.</p>
+    </div>
+    <a href="{{ url_for('assessment') }}" class="gradient-teal text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition self-start md:self-auto flex items-center">
+        <i class="fa-solid fa-plus mr-1.5"></i> Run Assessment
+    </a>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <!-- Total Registered Patients -->
+    <div class="glass-panel p-6 rounded-3xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Patients</span>
+            <div class="w-10 h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center border border-teal-100">
+                <i class="fa-solid fa-users text-sm"></i>
+            </div>
+        </div>
+        <h3 class="text-3xl font-black text-slate-900">{{ stats.total_users }}</h3>
+        <p class="text-xs text-slate-400 mt-1">Active user accounts</p>
+    </div>
+
+    <!-- Total Predictions Run -->
+    <div class="glass-panel p-6 rounded-3xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Screenings</span>
+            <div class="w-10 h-10 bg-sky-50 text-sky-700 rounded-xl flex items-center justify-center border border-sky-100">
+                <i class="fa-solid fa-heart-pulse text-sm"></i>
+            </div>
+        </div>
+        <h3 class="text-3xl font-black text-slate-900">{{ stats.total_predictions }}</h3>
+        <p class="text-xs text-slate-400 mt-1">Model inferences executed</p>
+    </div>
+
+    <!-- Disease Warnings -->
+    <div class="glass-panel p-6 rounded-3xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Disease Warnings</span>
+            <div class="w-10 h-10 bg-rose-50 text-rose-700 rounded-xl flex items-center justify-center border border-rose-100">
+                <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+            </div>
+        </div>
+        <h3 class="text-3xl font-black text-rose-600">{{ stats.heart_disease }}</h3>
+        <p class="text-xs text-slate-400 mt-1">Elevated risk detections</p>
+    </div>
+
+    <!-- Healthy Screenings -->
+    <div class="glass-panel p-6 rounded-3xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Healthy Profiles</span>
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center border border-emerald-100">
+                <i class="fa-solid fa-shield-heart text-sm"></i>
+            </div>
+        </div>
+        <h3 class="text-3xl font-black text-emerald-600">{{ stats.no_disease }}</h3>
+        <p class="text-xs text-slate-400 mt-1">Negative screening outcomes</p>
+    </div>
+</div>
+
+<!-- Risk Stratification Breakdown -->
+<div class="glass-panel p-6 sm:p-8 rounded-3xl mb-10">
+    <h3 class="text-base font-extrabold text-slate-900 mb-6 flex items-center">
+        <i class="fa-solid fa-chart-pie mr-2 text-teal-600"></i> Risk Stratification Distribution
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="p-5 rounded-2xl bg-rose-50 border border-rose-100">
+            <span class="text-xs font-bold text-rose-800 uppercase tracking-wider block mb-1">Higher Risk</span>
+            <span class="text-3xl font-black text-rose-900">{{ stats.risk_distribution.high }}</span>
+            <span class="text-xs text-rose-700 block mt-1">Requires clinical follow-up</span>
+        </div>
+        <div class="p-5 rounded-2xl bg-amber-50 border border-amber-100">
+            <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block mb-1">Moderate Risk</span>
+            <span class="text-3xl font-black text-amber-900">{{ stats.risk_distribution.moderate }}</span>
+            <span class="text-xs text-amber-700 block mt-1">Lifestyle intervention target</span>
+        </div>
+        <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-100">
+            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block mb-1">Low Risk</span>
+            <span class="text-3xl font-black text-emerald-900">{{ stats.risk_distribution.low }}</span>
+            <span class="text-xs text-emerald-700 block mt-1">Healthy cardiovascular index</span>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Inferences Table -->
+<div class="flex items-center justify-between mb-4">
+    <h3 class="text-base font-extrabold text-slate-900 flex items-center">
+        <i class="fa-solid fa-clock-rotate-left mr-2 text-teal-600 text-sm"></i> Recent Clinical Screenings
+    </h3>
+    <a href="{{ url_for('admin_predictions') }}" class="text-xs font-bold text-teal-700 hover:text-teal-900">
+        View All Logs <i class="fa-solid fa-arrow-right ml-1"></i>
+    </a>
+</div>
+
+<div class="glass-panel rounded-3xl overflow-hidden shadow-sm border border-slate-200/80">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-100 text-left text-sm">
+            <thead class="bg-slate-50/80">
+                <tr>
+                    <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Date & Time</th>
+                    <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Patient Alias</th>
+                    <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Outcome</th>
+                    <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Risk Level</th>
+                    <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 bg-white/70">
+                {% for record in recent %}
+                <tr class="hover:bg-teal-50/40 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-xs font-bold text-slate-500">
+                        {{ record.timestamp.strftime('%b %d, %Y %I:%M %p') if record.timestamp else 'N/A' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap font-extrabold text-slate-800">
+                        {{ record.patient.username if record.patient else 'Unknown' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold {{ 'bg-rose-50 text-rose-700 border border-rose-200' if record.prediction_label == 'Heart Disease Warning' else 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
+                            {{ record.prediction_label }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap font-semibold text-xs text-slate-700">
+                        {{ record.risk_level }} ({{ record.disease_probability }}%)
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <a href="{{ url_for('result', rec_id=record.id) }}" class="text-xs font-bold text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg border border-teal-200 transition">
+                            Inspect
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-6 py-8 text-center text-slate-400 text-xs">No recent assessment records logged.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

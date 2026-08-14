@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center w-full animate-fade-in-up">
+
+    <!-- Hero Section -->
+    <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between my-8 lg:my-16 z-10 gap-12">
+        <!-- Hero Text content -->
+        <div class="w-full lg:w-1/2 text-center lg:text-left">
+            <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-extrabold tracking-widest uppercase mb-6 shadow-sm">
+                <span class="flex h-2 w-2 rounded-full bg-teal-500 mr-2 animate-pulse"></span> Machine Learning Cardiovascular Diagnostics
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6">
+                Instant Clinical <span class="gradient-text">Heart Disease</span> Risk Analysis.
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 font-normal">
+                Trained on standardized clinical cardiovascular biomarkers, HeartCare.ai delivers reliable risk assessments alongside automated lifestyle and dietary protocols tailored to your vital stats.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('assessment') }}"
+                    class="w-full sm:w-auto text-center gradient-teal text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-teal-700/25 hover:shadow-xl hover:-translate-y-0.5 transition flex items-center justify-center">
+                    <i class="fa-solid fa-stethoscope mr-2"></i> Launch Assessment
+                </a>
+                <a href="{{ url_for('dashboard') }}"
+                    class="w-full sm:w-auto text-center bg-white text-slate-700 border border-slate-200 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 transition shadow-sm">
+                    View My Records
+                </a>
+                {% else %}
+                <a href="{{ url_for('register') }}"
+                    class="w-full sm:w-auto text-center gradient-teal text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-teal-700/25 hover:shadow-xl hover:-translate-y-0.5 transition">
+                    Get Started Free <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                </a>
+                <a href="{{ url_for('login') }}"
+                    class="w-full sm:w-auto text-center bg-white text-slate-700 border border-slate-200 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 transition shadow-sm">
+                    Sign In
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Key Feature Badges -->
+            <div class="mt-10 pt-8 border-t border-slate-200/60 grid grid-cols-3 gap-4 text-left">
+                <div>
+                    <div class="text-2xl font-extrabold text-slate-900">13</div>
+                    <div class="text-xs font-semibold text-slate-500">Clinical Markers</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-teal-700">Random Forest</div>
+                    <div class="text-xs font-semibold text-slate-500">Classifier Architecture</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-slate-900">&lt; 1 sec</div>
+                    <div class="text-xs font-semibold text-slate-500">Inference Latency</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Graphic / Interactive Card Preview -->
+        <div class="w-full lg:w-1/2 flex justify-center items-center relative">
+            <!-- Glow background -->
+            <div class="absolute w-80 h-80 bg-teal-400/20 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
+            <div class="absolute w-60 h-60 bg-sky-400/20 rounded-full blur-3xl -z-10 right-4 bottom-4"></div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl w-full max-w-md border border-white/90 shadow-2xl relative">
+                <div class="flex items-center justify-between pb-6 border-b border-slate-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl gradient-teal flex items-center justify-center text-white">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-sm">Sample Clinical Assessment</h3>
+                            <p class="text-[11px] text-slate-400 font-medium">Standardized 14-Feature Model</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 text-[11px] font-bold bg-teal-50 text-teal-700 rounded-lg border border-teal-200">
+                        Live Preview
+                    </span>
+                </div>
+
+                <div class="py-6 space-y-4">
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-slate-500"><i class="fa-solid fa-user-doctor mr-2 text-teal-600"></i>Age & Biological Sex</span>
+                        <span class="text-slate-800 font-bold">55 Yrs / Male</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-slate-500"><i class="fa-solid fa-gauge mr-2 text-teal-600"></i>Resting BP / Serum Chol</span>
+                        <span class="text-slate-800 font-bold">140 mm Hg / 260 mg/dl</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-slate-500"><i class="fa-solid fa-wave-square mr-2 text-teal-600"></i>Max Heart Rate (thalach)</span>
+                        <span class="text-slate-800 font-bold">145 bpm</span>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-extrabold text-teal-950">Evidence-Based Risk Stratification</div>
+                            <div class="text-[11px] text-teal-700">Immediate Personalized Lifestyle Protocol</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Features Grid -->
+    <div class="w-full mt-16 pt-12 border-t border-slate-200/80">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-xs font-extrabold tracking-widest uppercase text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">Core Capabilities</span>
+            <h2 class="text-3xl font-black text-slate-900 mt-3">Comprehensive Cardiac AI Screening</h2>
+            <p class="text-sm text-slate-500 mt-2">Engineered to evaluate 13 validated cardiovascular indicators with reproducible random forest classification.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <!-- Feature 1 -->
+            <div class="glass-panel p-8 rounded-3xl">
+                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center text-xl mb-6 border border-teal-100">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Random Forest Ensemble</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    Utilizes an ensemble of decision trees trained on the 1,025-patient cohort with stratified cross-validation for robust generalizability.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="glass-panel p-8 rounded-3xl">
+                <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-700 flex items-center justify-center text-xl mb-6 border border-sky-100">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Lifestyle Protocol Engine</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    Translates probability scores and patient markers into clear, category-specific lifestyle, nutrition, sleep, and exercise recommendations.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass-panel p-8 rounded-3xl">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-xl mb-6 border border-indigo-100">
+                    <i class="fa-solid fa-shield-heart"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Clinical Audit Trail</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    Every assessment is timestamped and safely archived for patient history tracking and longitudinal cardiovascular monitoring.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

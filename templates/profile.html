@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto w-full py-4 animate-fade-in-up">
+
+    <!-- Top Action Bar -->
+    <div class="flex items-center justify-between mb-8">
+        <a href="{{ url_for('admin_dashboard') if current_user.role == 'admin' else url_for('dashboard') }}" 
+           class="inline-flex items-center text-sm font-bold text-slate-600 hover:text-teal-700 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm hover:shadow transition group">
+            <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform text-teal-600"></i>
+            Back to {{ 'Admin Dashboard' if current_user.role == 'admin' else 'Dashboard' }}
+        </a>
+    </div>
+
+    <!-- Profile Header Card -->
+    <div class="glass-panel rounded-3xl p-6 sm:p-8 mb-8 relative overflow-hidden border border-white/80 shadow-lg">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10">
+            <!-- User Avatar Badge -->
+            <div class="relative">
+                <div class="w-20 h-20 rounded-2xl gradient-teal text-white flex items-center justify-center text-3xl font-black shadow-lg shadow-teal-700/20">
+                    {{ (current_user.full_name or current_user.username)[0] | upper }}
+                </div>
+            </div>
+
+            <!-- Profile Info & Badges -->
+            <div class="flex-1 text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                            {{ current_user.full_name or current_user.username }}
+                        </h1>
+                        <p class="text-slate-500 text-xs sm:text-sm mt-0.5 flex items-center justify-center sm:justify-start">
+                            <i class="fa-solid fa-at text-teal-600 mr-1"></i> {{ current_user.username }}
+                            {% if current_user.email %}
+                            <span class="mx-2 text-slate-300">•</span>
+                            <i class="fa-regular fa-envelope text-slate-400 mr-1"></i> {{ current_user.email }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider self-center sm:self-auto {{ 'bg-indigo-50 text-indigo-700 border border-indigo-200' if current_user.role == 'admin' else 'bg-teal-50 text-teal-700 border border-teal-200' }}">
+                        <i class="fa-solid {{ 'fa-shield-halved' if current_user.role == 'admin' else 'fa-user-check' }} mr-1.5 text-[11px]"></i>
+                        {{ current_user.role | capitalize }} Account
+                    </span>
+                </div>
+
+                <!-- Stats summary bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Assessments</span>
+                        <span class="text-xl font-black text-slate-900">{{ stats.total_assessments }}</span>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Member Since</span>
+                        <span class="text-sm font-bold text-slate-700 mt-1 block">
+                            {{ current_user.created_at.strftime('%b %Y') if current_user.created_at else '2026' }}
+                        </span>
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-1 bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Latest Status</span>
+                        <span class="text-sm font-bold mt-1 block {{ 'text-rose-600' if stats.latest_record and stats.latest_record.risk_level == 'Higher Risk' else ('text-amber-600' if stats.latest_record and stats.latest_record.risk_level == 'Moderate Risk' else 'text-emerald-600') }}">
+                            {{ stats.latest_record.risk_level if stats.latest_record else 'No Screenings' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <form method="POST" class="space-y-8">
+        
+        <!-- Personal Information Section -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+            <h2 class="text-base font-extrabold text-slate-900 mb-6 flex items-center">
+                <i class="fa-solid fa-id-card text-teal-600 mr-2.5"></i> Personal Profile Information
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Username -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Username <span class="text-rose-500">*</span></label>
+                    <input type="text" name="username" value="{{ current_user.username }}" required
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <!-- Full Name -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+                    <input type="text" name="full_name" value="{{ current_user.full_name or '' }}" placeholder="e.g. John Doe"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+                    <input type="email" name="email" value="{{ current_user.email or '' }}" placeholder="e.g. john@example.com"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Phone Number</label>
+                    <input type="text" name="phone" value="{{ current_user.phone or '' }}" placeholder="e.g. +1 555 123 4567"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <!-- Age -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Default Age</label>
+                    <input type="number" name="age" min="18" max="100" value="{{ current_user.age or '' }}" placeholder="e.g. 50"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Gender</label>
+                    <select name="gender" class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                        <option value="" {% if not current_user.gender %}selected{% endif %}>-- Not Specified --</option>
+                        <option value="Male" {% if current_user.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if current_user.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if current_user.gender == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security / Password Update -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative">
+            <h2 class="text-base font-extrabold text-slate-900 mb-6 flex items-center">
+                <i class="fa-solid fa-lock text-teal-600 mr-2.5"></i> Security & Password Update
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Current Password</label>
+                    <input type="password" name="current_password" placeholder="Required only if changing password"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">New Password</label>
+                    <input type="password" name="new_password" placeholder="Enter new password"
+                        class="input-clinical w-full px-4 py-3 rounded-xl text-slate-800 font-semibold text-sm">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center pt-2">
+            <button type="submit"
+                class="gradient-teal text-white py-3.5 px-8 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition">
+                Save Profile Changes
+            </button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
