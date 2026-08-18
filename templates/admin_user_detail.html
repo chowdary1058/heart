@@ -2,23 +2,23 @@
 
 {% block content %}
 <!-- Admin Navigation Tabs -->
-<div class="w-full bg-slate-900 rounded-2xl mb-8 flex items-center justify-between p-2 shadow-lg hidden md:flex">
+<div class="w-full bg-slate-900/90 dark:bg-slate-950/60 rounded-2xl mb-8 flex items-center justify-between p-2 shadow-lg backdrop-blur-md hidden md:flex border border-slate-800/40">
     <div class="flex space-x-1">
         <a href="{{ url_for('admin_dashboard') }}"
-            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-bold text-sm transition-colors flex items-center">
+            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-bold text-sm transition-colors flex items-center">
             <i class="fa-solid fa-chart-pie mr-2 text-slate-400"></i> Platform Analytics
         </a>
         <a href="{{ url_for('admin_users') }}"
             class="px-5 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-sm transition-colors flex items-center">
-            <i class="fa-solid fa-users mr-2 text-teal-400"></i> Patient Directory
+            <i class="fa-solid fa-users mr-2 text-brand-400 animate-pulse"></i> Patient Directory
         </a>
         <a href="{{ url_for('admin_predictions') }}"
-            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-bold text-sm transition-colors flex items-center">
+            class="px-5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 font-bold text-sm transition-colors flex items-center">
             <i class="fa-solid fa-list-check mr-2 text-slate-400"></i> Clinical Audit Logs
         </a>
     </div>
-    <div class="px-4 text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
-        <i class="fa-solid fa-shield-halved mr-2 text-teal-400"></i> Admin Session
+    <div class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center">
+        <i class="fa-solid fa-shield-halved mr-2 text-brand-500"></i> Admin Session
     </div>
 </div>
 
@@ -26,19 +26,19 @@
 <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
     <div>
         <a href="{{ url_for('admin_users') }}"
-            class="text-xs font-bold text-teal-700 uppercase tracking-wider hover:text-teal-900 transition flex items-center mb-2">
+            class="text-xs font-bold text-brand-700 dark:text-brand-400 uppercase tracking-wider hover:underline transition flex items-center mb-2">
             <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Patient Directory
         </a>
-        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Patient Dossier: {{ user.username }}</h1>
-        <p class="text-slate-500 text-sm font-medium mt-1">
-            Patient ID: #{{ user.id }} <span class="mx-2 text-slate-300">|</span> Registered: {{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'N/A' }}
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Patient Dossier: {{ user.username }}</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">
+            Patient ID: #{{ user.id }} <span class="mx-2 text-slate-300 dark:text-slate-700">|</span> Registered: {{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'N/A' }}
         </p>
     </div>
     <div>
         <form action="{{ url_for('admin_user_delete', user_id=user.id) }}" method="POST"
             onsubmit="return confirm('WARNING: You are about to permanently delete this patient account and all associated prediction records. Proceed?');">
             <button type="submit"
-                class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-xl transition flex items-center text-xs shadow-sm">
+                class="bg-rose-50 hover:bg-rose-100 border border-rose-200/50 text-rose-700 dark:bg-rose-950/20 dark:hover:bg-rose-950/40 dark:border-rose-900/30 dark:text-rose-400 font-bold px-4 py-2.5 rounded-xl transition flex items-center text-xs shadow-sm cursor-pointer">
                 <i class="fa-solid fa-trash-can mr-2"></i> Delete Account & Records
             </button>
         </form>
@@ -47,69 +47,69 @@
 
 <!-- Quick Stats -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-    <div class="glass-panel p-6 rounded-3xl flex items-center space-x-5">
-        <div class="w-12 h-12 bg-teal-50 text-teal-700 rounded-2xl flex items-center justify-center text-xl border border-teal-100">
+    <div class="glass-panel p-6 rounded-3xl flex items-center space-x-5 border border-slate-200/50 dark:border-slate-800/50">
+        <div class="w-12 h-12 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 rounded-2xl flex items-center justify-center text-xl border border-brand-100 dark:border-brand-900/30">
             <i class="fa-solid fa-file-medical"></i>
         </div>
         <div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Screenings Logged</span>
-            <span class="text-3xl font-black text-slate-900">{{ predictions|length }}</span>
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Total Assessments</span>
+            <span class="text-3xl font-black text-slate-900 dark:text-white">{{ predictions|length }}</span>
         </div>
     </div>
 
     {% set high_risk_count = predictions|selectattr("risk_level", "equalto", "Higher Risk")|list|length %}
-    <div class="glass-panel p-6 rounded-3xl flex items-center space-x-5">
-        <div class="w-12 h-12 bg-rose-50 text-rose-700 rounded-2xl flex items-center justify-center text-xl border border-rose-100">
+    <div class="glass-panel p-6 rounded-3xl flex items-center space-x-5 border border-slate-200/50 dark:border-slate-800/50">
+        <div class="w-12 h-12 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 rounded-2xl flex items-center justify-center text-xl border border-rose-100 dark:border-rose-900/30">
             <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
         <div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Higher Risk Alerts</span>
-            <span class="text-3xl font-black text-rose-600">{{ high_risk_count }}</span>
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Higher Risk Alerts</span>
+            <span class="text-3xl font-black text-rose-600 dark:text-rose-400">{{ high_risk_count }}</span>
         </div>
     </div>
 </div>
 
 <!-- History Log for User -->
-<h3 class="text-base font-extrabold text-slate-900 mb-4 flex items-center">
-    <i class="fa-solid fa-clock-rotate-left mr-2 text-teal-600 text-sm"></i> Clinical History Trail
+<h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-widest mb-4 flex items-center">
+    <i class="fa-solid fa-clock-rotate-left mr-2 text-brand-500 text-sm animate-pulse"></i> Patient Assessment History
 </h3>
 
-<div class="glass-panel rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden text-sm">
+<div class="glass-panel rounded-3xl border border-slate-200/50 dark:border-slate-800/60 shadow-sm overflow-hidden text-sm">
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-100 text-left">
-            <thead class="bg-slate-50/80">
+        <table class="min-w-full divide-y divide-slate-100 dark:divide-slate-800 text-left">
+            <thead class="bg-slate-50/50 dark:bg-slate-800/20">
                 <tr>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Date & Time</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Prediction Outcome</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Risk Level</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">Action</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Date & Time</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Prediction Outcome</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Risk Level</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Action</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 bg-white/70">
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-transparent">
                 {% for record in predictions %}
                 {% set is_danger = (record.prediction_label == 'Heart Disease Warning') %}
-                <tr class="hover:bg-teal-50/40 transition-colors">
-                    <td class="px-6 py-4.5 whitespace-nowrap text-xs font-bold text-slate-500">
+                <tr class="hover:bg-brand-50/20 dark:hover:bg-slate-800/10 transition-colors">
+                    <td class="px-6 py-4.5 whitespace-nowrap text-xs font-bold text-slate-500 dark:text-slate-400">
                         {{ record.timestamp.strftime('%B %d, %Y %I:%M %p') if record.timestamp else 'N/A' }}
                     </td>
                     <td class="px-6 py-4.5 whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ 'bg-rose-50 text-rose-700 border border-rose-200' if is_danger else 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
+                        <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-extrabold {{ 'bg-rose-50/90 text-rose-700 border border-rose-200/50 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/40' if is_danger else 'bg-emerald-50/90 text-emerald-700 border border-emerald-200/50 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/40' }}">
                             {{ record.prediction_label }}
                         </span>
                     </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap font-extrabold text-slate-900">
+                    <td class="px-6 py-4.5 whitespace-nowrap font-extrabold text-slate-900 dark:text-white">
                         {{ record.risk_level }} ({{ record.disease_probability }}%)
                     </td>
                     <td class="px-6 py-4.5 whitespace-nowrap text-right">
                         <a href="{{ url_for('result', rec_id=record.id) }}"
-                            class="text-xs font-bold text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg border border-teal-200 transition">
+                            class="text-xs font-bold text-brand-800 dark:text-brand-300 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/30 dark:hover:bg-brand-950/50 px-3.5 py-2 rounded-xl border border-brand-200/40 dark:border-brand-900/30 transition">
                             View Report
                         </a>
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4" class="px-6 py-10 text-center text-slate-400 text-xs font-medium">No clinical assessments logged for this patient.</td>
+                    <td colspan="4" class="px-6 py-10 text-center text-slate-400 dark:text-slate-500 text-xs font-medium">No clinical assessments logged for this patient.</td>
                 </tr>
                 {% endfor %}
             </tbody>

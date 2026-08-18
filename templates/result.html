@@ -6,86 +6,90 @@
     <!-- Top Action Navigation -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 no-print">
         <div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Clinical Assessment Report</h1>
-            <p class="text-slate-500 text-sm mt-0.5">Finalized on {{ record.timestamp.strftime('%B %d, %Y at %I:%M %p') if record.timestamp else 'Recently Finalized' }}</p>
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Clinical Assessment Report</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Finalized on {{ record.timestamp.strftime('%B %d, %Y at %I:%M %p') if record.timestamp else 'Recently Finalized' }}</p>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="window.print()" class="text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm transition flex items-center">
-                <i class="fa-solid fa-print mr-2 text-slate-500"></i> Print / Save PDF
+            <button onclick="window.print()" class="text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 px-4 py-2.5 rounded-xl shadow-sm transition flex items-center cursor-pointer">
+                <i class="fa-solid fa-print mr-2 text-slate-400"></i> Print / Save PDF
             </button>
             <a href="{{ url_for('admin_predictions') if current_user.role == 'admin' else url_for('dashboard') }}"
-                class="text-sm font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-4 py-2.5 rounded-xl transition flex items-center">
-                <i class="fa-solid fa-arrow-left mr-2 text-teal-600"></i> Back to {{ 'Audit Logs' if current_user.role == 'admin' else 'Dashboard' }}
+                class="text-sm font-bold text-brand-800 bg-brand-50 hover:bg-brand-100 dark:text-brand-300 dark:bg-brand-950/30 dark:hover:bg-brand-950/50 border border-brand-200/40 dark:border-brand-900/30 px-4 py-2.5 rounded-xl transition flex items-center">
+                <i class="fa-solid fa-arrow-left mr-2 text-brand-500"></i> Back to {{ 'Audit Logs' if current_user.role == 'admin' else 'Dashboard' }}
             </a>
         </div>
     </div>
 
-    <!-- Alert / Risk Level Visual Card -->
     {% set is_high_risk = (record.risk_level == 'Higher Risk') %}
     {% set is_mod_risk = (record.risk_level == 'Moderate Risk') %}
 
-    {% set bg_gradient = 'from-rose-600 to-rose-900' if is_high_risk else ('from-amber-500 to-amber-800' if is_mod_risk else 'from-emerald-600 to-teal-800') %}
-    {% set badge_color = 'bg-rose-100 text-rose-800 border-rose-200' if is_high_risk else ('bg-amber-100 text-amber-800 border-amber-200' if is_mod_risk else 'bg-emerald-100 text-emerald-800 border-emerald-200') %}
+    {% set bg_gradient = 'from-rose-600 to-rose-900 dark:from-rose-950/40 dark:to-rose-900/40' if is_high_risk else ('from-amber-500 to-amber-700 dark:from-amber-950/40 dark:to-amber-900/40' if is_mod_risk else 'from-emerald-600 to-brand-800 dark:from-emerald-950/40 dark:to-brand-900/40') %}
+    {% set text_color = 'text-rose-500 dark:text-rose-400' if is_high_risk else ('text-amber-500 dark:text-amber-400' if is_mod_risk else 'text-emerald-500 dark:text-emerald-400') %}
+    {% set stroke_color = 'stroke-rose-500' if is_high_risk else ('stroke-amber-500' if is_mod_risk else 'stroke-emerald-500') %}
+    {% set badge_color = 'bg-rose-50 text-rose-700 border-rose-200/50 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/40' if is_high_risk else ('bg-amber-50 text-amber-700 border-amber-200/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/40' if is_mod_risk else 'bg-emerald-50 text-emerald-700 border-emerald-200/50 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/40') %}
 
-    <div class="rounded-3xl overflow-hidden shadow-xl mb-10 border border-white/80">
+    <!-- Main Results Card -->
+    <div class="glass-panel rounded-3xl overflow-hidden shadow-xl mb-10 border border-slate-200/50 dark:border-slate-800/60">
         <div class="flex flex-col lg:flex-row">
 
             <!-- Risk Status Banner (Left) -->
             <div class="w-full lg:w-2/5 bg-gradient-to-br {{ bg_gradient }} p-8 sm:p-12 text-white flex flex-col justify-center items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
                 <div class="relative z-10 flex flex-col items-center">
-                    <div class="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl mb-4 border border-white/30 shadow-lg">
+                    <div class="w-20 h-20 rounded-2xl bg-white/10 dark:bg-slate-900/30 backdrop-blur-md flex items-center justify-center text-4xl mb-6 border border-white/20 shadow-md">
                         {% if is_high_risk %}
-                        <i class="fa-solid fa-heart-crack text-rose-200"></i>
+                        <i class="fa-solid fa-heart-crack text-rose-300 animate-pulse"></i>
                         {% elif is_mod_risk %}
-                        <i class="fa-solid fa-triangle-exclamation text-amber-200"></i>
+                        <i class="fa-solid fa-triangle-exclamation text-amber-300"></i>
                         {% else %}
-                        <i class="fa-solid fa-shield-heart text-emerald-200"></i>
+                        <i class="fa-solid fa-shield-heart text-emerald-300"></i>
                         {% endif %}
                     </div>
-                    <span class="text-xs font-black uppercase tracking-widest text-white/75 mb-1">Stratified Risk Tier</span>
-                    <h2 class="text-3xl font-black mb-2">{{ record.risk_level }}</h2>
-                    <span class="text-xs px-3 py-1 rounded-full bg-white/20 font-bold border border-white/30">
+                    <span class="text-[9px] font-black uppercase tracking-widest text-teal-100/70 dark:text-slate-400 mb-2">Stratified Risk Tier</span>
+                    <h2 class="text-3xl font-black mb-3">{{ record.risk_level }}</h2>
+                    <span class="text-xs px-4 py-1.5 rounded-full bg-white/15 dark:bg-slate-800/50 font-bold border border-white/25">
                         {{ record.prediction_label }}
                     </span>
                 </div>
             </div>
 
-            <!-- Risk Metrics & Context (Right) -->
-            <div class="w-full lg:w-3/5 bg-white p-8 sm:p-12 flex flex-col justify-center">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold tracking-wider uppercase border border-slate-200">
-                        <i class="fa-solid fa-tree mr-1.5 text-teal-600"></i> Random Forest ML Model
-                    </span>
-                    <span class="text-xs font-bold text-slate-400">Record #{{ record.id }}</span>
+            <!-- Risk Metrics & Gauge visualization (Right) -->
+            <div class="w-full lg:w-3/5 p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 bg-transparent">
+                <div class="flex-1 text-center sm:text-left">
+                    <div class="flex items-center justify-center sm:justify-start space-x-3 mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider border border-slate-200/50 dark:border-slate-800/40">
+                            <i class="fa-solid fa-tree mr-1.5 text-brand-500"></i> Random Forest ML
+                        </span>
+                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Record #{{ record.id }}</span>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-4 leading-snug">
+                        {{ record.prediction_label }}
+                    </h3>
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium mb-4">
+                        This probability index represents statistical branch predictions generated across 13 clinical indicators (resting pressure, serum cholesterol, exercise ST slope, coronary vessels, and thalassemia defects).
+                    </p>
                 </div>
 
-                <h3 class="text-2xl font-black text-slate-900 mb-6 leading-snug">
-                    {{ record.prediction_label }}
-                </h3>
-
-                <!-- Probability Bar & Context -->
-                <div class="space-y-4">
-                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Calculated Disease Probability</span>
-                            <span class="text-3xl font-black text-slate-900">{{ record.disease_probability }}<span class="text-lg text-slate-400 font-semibold">%</span></span>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-flex px-3 py-1.5 rounded-xl text-xs font-bold border {{ badge_color }}">
-                                {{ record.risk_level }}
-                            </span>
+                <!-- Radial Gauge Graphic -->
+                <div class="flex-shrink-0 flex flex-col items-center">
+                    <div class="relative w-40 h-40 flex items-center justify-center gauge-container">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="80" cy="80" r="68" stroke-width="10" fill="transparent" class="gauge-track stroke-slate-100 dark:stroke-slate-800/50" />
+                            {% set pct = record.disease_probability %}
+                            <!-- Circumference = 2 * pi * r = 2 * 3.14159 * 68 = 427.256 -->
+                            <circle cx="80" cy="80" r="68" stroke-width="10" fill="transparent" 
+                                    class="gauge-fill {{ stroke_color }} drop-shadow-md"
+                                    stroke-dasharray="427.3"
+                                    stroke-dashoffset="{{ 427.3 - (427.3 * pct / 100) }}"
+                                    stroke-linecap="round" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-3xl font-black text-slate-900 dark:text-white leading-none">{{ record.disease_probability }}%</span>
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Disease Prob</span>
                         </div>
                     </div>
-
-                    <!-- Progress Bar -->
-                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                        <div class="h-3 rounded-full transition-all duration-1000 {{ 'bg-rose-500' if is_high_risk else ('bg-amber-500' if is_mod_risk else 'bg-emerald-500') }}"
-                            style="width: {{ record.disease_probability }}%;"></div>
-                    </div>
-
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        This probability is estimated from statistical splits across 13 clinical biomarkers (resting pressure, serum cholesterol, exercise ST slope, coronary fluoroscopy vessels, and thal defect).
-                    </p>
                 </div>
             </div>
         </div>
@@ -93,15 +97,13 @@
 
     <!-- Personalized Lifestyle Protocol -->
     <div class="mb-10">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-xl gradient-teal text-white flex items-center justify-center text-sm shadow-md">
-                    <i class="fa-solid fa-clipboard-check"></i>
-                </div>
-                <div>
-                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Personalized Lifestyle Protocol</h3>
-                    <p class="text-xs text-slate-500">Tailored action points derived from patient biomarkers and risk severity</p>
-                </div>
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-clipboard-check text-base text-teal-100"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Personalized Lifestyle Protocol</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Tailored action protocols derived from patient biomarkers and risk severity</p>
             </div>
         </div>
 
@@ -109,18 +111,18 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- 1. Diet & Nutrition -->
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-teal-500">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center text-base border border-teal-100">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-teal-500 dark:border-teal-500/80">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 flex items-center justify-center text-base border border-teal-100 dark:border-teal-900/30">
                         <i class="fa-solid fa-apple-whole"></i>
                     </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Diet & Nutrition Guidance</h4>
+                    <h4 class="font-extrabold text-slate-900 dark:text-white text-base">Diet & Nutrition Guidance</h4>
                 </div>
-                <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                <ul class="space-y-3.5 text-sm text-slate-600 dark:text-slate-400 font-semibold">
                     {% for item in recs.get('diet', []) %}
                     <li class="flex items-start">
-                        <i class="fa-solid fa-circle-check text-teal-600 text-xs mt-1 mr-2.5 flex-shrink-0"></i>
-                        <span class="leading-snug">{{ item }}</span>
+                        <i class="fa-solid fa-circle-check text-teal-500 text-xs mt-1.5 mr-3 flex-shrink-0"></i>
+                        <span class="leading-relaxed">{{ item }}</span>
                     </li>
                     {% else %}
                     <li class="text-slate-400 text-xs italic">Maintain balanced cardiovascular dietary practices.</li>
@@ -129,18 +131,18 @@
             </div>
 
             <!-- 2. Physical Activity -->
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-sky-500">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center text-base border border-sky-100">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-sky-500 dark:border-sky-500/80">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base border border-sky-100 dark:border-sky-900/30">
                         <i class="fa-solid fa-person-running"></i>
                     </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Physical Activity & Exercise</h4>
+                    <h4 class="font-extrabold text-slate-900 dark:text-white text-base">Physical Activity & Exercise</h4>
                 </div>
-                <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                <ul class="space-y-3.5 text-sm text-slate-600 dark:text-slate-400 font-semibold">
                     {% for item in recs.get('physical_activity', []) %}
                     <li class="flex items-start">
-                        <i class="fa-solid fa-circle-check text-sky-600 text-xs mt-1 mr-2.5 flex-shrink-0"></i>
-                        <span class="leading-snug">{{ item }}</span>
+                        <i class="fa-solid fa-circle-check text-sky-500 text-xs mt-1.5 mr-3 flex-shrink-0"></i>
+                        <span class="leading-relaxed">{{ item }}</span>
                     </li>
                     {% else %}
                     <li class="text-slate-400 text-xs italic">Continue regular physician-approved physical exercises.</li>
@@ -149,18 +151,18 @@
             </div>
 
             <!-- 3. Sleep & Recovery -->
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-indigo-500">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-base border border-indigo-100">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-indigo-500 dark:border-indigo-500/80">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-base border border-indigo-100 dark:border-indigo-900/30">
                         <i class="fa-solid fa-bed"></i>
                     </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Sleep & Cardiovascular Recovery</h4>
+                    <h4 class="font-extrabold text-slate-900 dark:text-white text-base">Sleep & Cardiovascular Recovery</h4>
                 </div>
-                <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                <ul class="space-y-3.5 text-sm text-slate-600 dark:text-slate-400 font-semibold">
                     {% for item in recs.get('sleep', []) %}
                     <li class="flex items-start">
-                        <i class="fa-solid fa-circle-check text-indigo-600 text-xs mt-1 mr-2.5 flex-shrink-0"></i>
-                        <span class="leading-snug">{{ item }}</span>
+                        <i class="fa-solid fa-circle-check text-indigo-500 text-xs mt-1.5 mr-3 flex-shrink-0"></i>
+                        <span class="leading-relaxed">{{ item }}</span>
                     </li>
                     {% else %}
                     <li class="text-slate-400 text-xs italic">Prioritize 7-9 hours of consistent sleep.</li>
@@ -169,24 +171,24 @@
             </div>
 
             <!-- 4. Habits & Glycemia Monitoring -->
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-rose-500">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center text-base border border-rose-100">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border-t-4 border-rose-500 dark:border-rose-500/80">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-base border border-rose-100 dark:border-rose-900/30">
                         <i class="fa-solid fa-heart-pulse"></i>
                     </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Habits & Vitals Monitoring</h4>
+                    <h4 class="font-extrabold text-slate-900 dark:text-white text-base">Habits & Vitals Monitoring</h4>
                 </div>
-                <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                <ul class="space-y-3.5 text-sm text-slate-600 dark:text-slate-400 font-semibold">
                     {% for item in recs.get('smoking_alcohol', []) %}
                     <li class="flex items-start">
-                        <i class="fa-solid fa-circle-check text-rose-600 text-xs mt-1 mr-2.5 flex-shrink-0"></i>
-                        <span class="leading-snug">{{ item }}</span>
+                        <i class="fa-solid fa-circle-check text-rose-500 text-xs mt-1.5 mr-3 flex-shrink-0"></i>
+                        <span class="leading-relaxed">{{ item }}</span>
                     </li>
                     {% endfor %}
                     {% for item in recs.get('healthy_habits', []) %}
                     <li class="flex items-start">
-                        <i class="fa-solid fa-circle-check text-rose-600 text-xs mt-1 mr-2.5 flex-shrink-0"></i>
-                        <span class="leading-snug">{{ item }}</span>
+                        <i class="fa-solid fa-circle-check text-rose-500 text-xs mt-1.5 mr-3 flex-shrink-0"></i>
+                        <span class="leading-relaxed">{{ item }}</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -195,50 +197,50 @@
     </div>
 
     <!-- Patient Input Vitals Summary Table -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-10">
-        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-            <h4 class="font-bold text-slate-700 uppercase tracking-widest text-xs">
-                <i class="fa-solid fa-database mr-2 text-slate-400"></i> Input Biomarker Values (Clinical Baseline)
+    <div class="bg-white/60 dark:bg-slate-900/50 rounded-3xl border border-slate-200/50 dark:border-slate-800/60 shadow-sm overflow-hidden mb-10">
+        <div class="px-6 py-4.5 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-200/50 dark:border-slate-800/60 flex justify-between items-center">
+            <h4 class="font-bold text-slate-600 dark:text-slate-300 uppercase tracking-widest text-[10px]">
+                <i class="fa-solid fa-database mr-2 text-slate-400"></i> Analyzed Patient Vitals Baseline
             </h4>
-            <span class="text-xs font-semibold text-slate-400">13 Features Analyzed</span>
+            <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">13 Markers Checked</span>
         </div>
         <div class="p-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 text-left text-xs">
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Age</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ record.age }} yrs</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Age</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ record.age }} yrs</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Sex</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ 'Male' if record.sex == 1 else 'Female' }}</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Sex</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ 'Male' if record.sex == 1 else 'Female' }}</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Resting BP</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ record.trestbps }} mm Hg</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Resting BP</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ record.trestbps }} mm Hg</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Cholesterol</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ record.chol }} mg/dl</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Cholesterol</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ record.chol }} mg/dl</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Chest Pain</span>
-                <span class="font-extrabold text-slate-800 text-sm">Type {{ record.cp }}</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Chest Pain</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">Type {{ record.cp }}</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">Max HR</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ record.thalach }} bpm</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">Max HR</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ record.thalach }} bpm</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-                <span class="block text-slate-400 font-semibold mb-1 uppercase text-[10px]">ST Dep (oldpeak)</span>
-                <span class="font-extrabold text-slate-800 text-sm">{{ record.oldpeak }}</span>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <span class="block text-slate-400 dark:text-slate-500 font-bold mb-1 uppercase text-[9px]">ST Dep</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">{{ record.oldpeak }}</span>
             </div>
         </div>
     </div>
 
     <!-- Medical Disclaimer Card -->
-    <div class="p-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 text-xs leading-relaxed flex items-start space-x-3">
-        <i class="fa-solid fa-triangle-exclamation text-slate-400 text-base mt-0.5 flex-shrink-0"></i>
+    <div class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex items-start space-x-3">
+        <i class="fa-solid fa-triangle-exclamation text-slate-400 dark:text-slate-600 text-lg mt-0.5 flex-shrink-0"></i>
         <div>
-            <strong class="font-bold text-slate-700">Clinical AI Disclaimer:</strong>
+            <strong class="font-bold text-slate-700 dark:text-slate-300">Clinical AI Disclaimer:</strong>
             This assessment is generated by an educational machine learning model (Random Forest Classifier). It is designed to assist personal wellness awareness and risk stratification; it does NOT constitute a definitive medical diagnosis, prescription, or clinical decision. Always consult a licensed cardiologist or healthcare physician for medical evaluation and diagnostic testing.
         </div>
     </div>

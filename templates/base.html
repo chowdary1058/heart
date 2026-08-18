@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeartCare AI | Intelligent Cardiovascular Risk Assessment</title>
+    <meta name="description" content="Intelligent cardiovascular risk stratification and automated lifestyle protocols using machine learning.">
+    <title>HeartCare AI | Premium Intelligent Cardiovascular Assessment</title>
+
+    <!-- Theme Initialization Script (Prevents flash of white/dark) -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -37,109 +42,44 @@
                         danger: '#f43f5e',
                         warning: '#f59e0b',
                         success: '#10b981'
-                    },
-                    boxShadow: {
-                        'glass': '0 8px 32px 0 rgba(15, 118, 110, 0.08)',
-                        'glass-hover': '0 16px 40px 0 rgba(15, 118, 110, 0.16)',
-                        'glow-teal': '0 0 25px rgba(20, 184, 166, 0.35)',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(16px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        heartbeat: {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '14%': { transform: 'scale(1.15)' },
-                            '28%': { transform: 'scale(1)' },
-                            '42%': { transform: 'scale(1.15)' },
-                            '70%': { transform: 'scale(1)' },
-                        }
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
-                        'heartbeat': 'heartbeat 2s infinite ease-in-out',
-                        'pulse-slow': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
         }
     </script>
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 10% 10%, rgba(20, 184, 166, 0.05) 0px, transparent 50%),
-                radial-gradient(at 90% 90%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
-                radial-gradient(#0f766e 0.6px, transparent 0.6px);
-            background-size: 100% 100%, 100% 100%, 24px 24px;
-            background-attachment: fixed;
-        }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-panel:hover {
-            box-shadow: 0 16px 40px -10px rgba(15, 118, 110, 0.12);
-            border-color: rgba(20, 184, 166, 0.3);
-        }
-
-        .gradient-teal {
-            background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .input-clinical {
-            border: 1px solid #cbd5e1;
-            background-color: #ffffff;
-            transition: all 0.2s ease;
-        }
-
-        .input-clinical:focus {
-            border-color: #0d9488;
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
-            outline: none;
-        }
-
-        @media print {
-            nav, footer, .no-print {
-                display: none !important;
-            }
-            body {
-                background: #ffffff !important;
-            }
-        }
-    </style>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom visual style overrides -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Three.js (For 3D glowing heart rendering) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Custom Theme Logic -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </head>
 
-<body class="flex flex-col min-h-screen text-slate-800 antialiased selection:bg-brand-600 selection:text-white">
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-600 selection:text-white relative">
+
+    <!-- Canvas for ambient background particles -->
+    <canvas id="particle-canvas"></canvas>
 
     <!-- Top Navigation Header -->
-    <nav class="bg-white/85 backdrop-blur-xl border-b border-slate-200/75 sticky top-0 z-50 transition-all">
+    <nav class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 sticky top-0 z-50 transition-all no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 
                 <!-- Logo & Brand -->
                 <div class="flex items-center space-x-3">
                     <a href="{{ url_for('index') }}" class="flex items-center space-x-3 group">
-                        <div class="w-11 h-11 gradient-teal rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-700/20 group-hover:scale-105 transition-transform duration-300">
-                            <i class="fa-solid fa-heart-pulse text-xl animate-heartbeat"></i>
+                        <div class="w-11 h-11 bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-500/20 dark:shadow-teal-900/40 group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-heart-pulse text-xl animate-heartbeat-slow text-teal-100"></i>
                         </div>
                         <div>
-                            <span class="font-extrabold text-2xl text-slate-900 tracking-tight">HeartCare<span class="text-teal-600">.ai</span></span>
-                            <span class="block text-[10px] font-bold text-slate-400 tracking-widest uppercase -mt-1">ML Clinical Intelligence</span>
+                            <span class="font-extrabold text-2xl text-slate-900 dark:text-white tracking-tight">HeartCare<span class="text-brand-500">.ai</span></span>
+                            <span class="block text-[9px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase -mt-1">ML Clinical Intelligence</span>
                         </div>
                     </a>
                 </div>
@@ -149,60 +89,67 @@
                     {% if current_user.is_authenticated %}
                         {% if current_user.role == 'admin' %}
                             <a href="{{ url_for('admin_dashboard') }}"
-                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
-                                <i class="fa-solid fa-gauge-high mr-2 text-teal-600"></i>Dashboard
+                                class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-2 rounded-xl hover:bg-brand-50 dark:hover:bg-slate-800/50 transition flex items-center">
+                                <i class="fa-solid fa-gauge-high mr-2 text-brand-500"></i>Dashboard
                             </a>
                             <a href="{{ url_for('admin_users') }}"
-                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
-                                <i class="fa-solid fa-users mr-2 text-teal-600"></i>Patients
+                                class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-2 rounded-xl hover:bg-brand-50 dark:hover:bg-slate-800/50 transition flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-brand-500"></i>Patients
                             </a>
                             <a href="{{ url_for('admin_predictions') }}"
-                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition flex items-center">
-                                <i class="fa-solid fa-clipboard-list mr-2 text-teal-600"></i>Audit Logs
+                                class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-2 rounded-xl hover:bg-brand-50 dark:hover:bg-slate-800/50 transition flex items-center">
+                                <i class="fa-solid fa-clipboard-list mr-2 text-brand-500"></i>Logs
                             </a>
                         {% else %}
                             <a href="{{ url_for('dashboard') }}"
-                                class="text-sm font-semibold text-slate-600 hover:text-teal-700 px-3.5 py-2 rounded-xl hover:bg-teal-50 transition hidden sm:flex items-center">
-                                <i class="fa-solid fa-clock-rotate-left mr-2 text-teal-600"></i>My History
+                                class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3.5 py-2 rounded-xl hover:bg-brand-50 dark:hover:bg-slate-800/50 transition hidden sm:flex items-center">
+                                <i class="fa-solid fa-clock-rotate-left mr-2 text-brand-500"></i>History
                             </a>
                             <a href="{{ url_for('assessment') }}"
-                                class="text-sm font-bold gradient-teal text-white px-5 py-2.5 rounded-xl shadow-md shadow-teal-700/20 hover:shadow-lg hover:shadow-teal-700/30 hover:-translate-y-0.5 transition flex items-center">
-                                <i class="fa-solid fa-stethoscope mr-2"></i>New Assessment
+                                class="text-sm font-bold bg-gradient-to-r from-brand-500 to-brand-600 text-white px-5 py-2.5 rounded-xl shadow-md shadow-brand-500/10 hover:shadow-lg hover:shadow-brand-500/25 hover:-translate-y-0.5 transition flex items-center">
+                                <i class="fa-solid fa-stethoscope mr-2 text-brand-100"></i>New Assessment
                             </a>
                         {% endif %}
 
-                        <div class="h-6 w-px bg-slate-200 mx-1 hidden md:block"></div>
+                        <!-- Divider -->
+                        <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden md:block"></div>
 
                         <!-- User Profile Badge -->
                         <a href="{{ url_for('profile') }}"
-                            class="flex items-center font-bold text-xs md:text-sm text-slate-700 bg-slate-100 hover:bg-teal-50 hover:text-teal-800 border border-slate-200 hover:border-teal-200 px-3.5 py-2 rounded-xl transition shadow-sm"
+                            class="flex items-center font-bold text-xs md:text-sm text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-brand-200 dark:hover:border-slate-600 px-3.5 py-2 rounded-xl transition shadow-sm"
                             title="Profile & Settings">
-                            <div class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center mr-2 text-xs font-bold">
+                            <div class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center mr-2 text-xs font-bold shadow-sm">
                                 {{ current_user.username[0]|upper }}
                             </div>
-                            <span class="truncate max-w-[110px]">{{ current_user.username }}</span>
+                            <span class="truncate max-w-[100px]">{{ current_user.username }}</span>
                             {% if current_user.role == 'admin' %}
-                            <span class="ml-2 px-1.5 py-0.5 text-[10px] bg-indigo-100 text-indigo-700 rounded font-extrabold uppercase">Admin</span>
+                            <span class="ml-2 px-1.5 py-0.5 text-[9px] bg-brand-200 text-brand-800 dark:bg-brand-900/60 dark:text-brand-300 rounded font-extrabold uppercase">Admin</span>
                             {% endif %}
                         </a>
 
                         <!-- Logout -->
                         <a href="{{ url_for('logout') }}"
-                            class="text-sm font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 p-2.5 rounded-xl transition"
+                            class="text-sm font-bold text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 p-2.5 rounded-xl transition"
                             title="Sign Out">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
                         </a>
 
                     {% else %}
                         <a href="{{ url_for('login') }}"
-                            class="text-sm font-bold text-slate-700 hover:text-teal-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition">
+                            class="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-4 py-2 rounded-xl transition">
                             Sign In
                         </a>
                         <a href="{{ url_for('register') }}"
-                            class="text-sm font-bold gradient-teal text-white px-5 py-2.5 rounded-xl shadow-md shadow-teal-700/20 hover:shadow-lg hover:-translate-y-0.5 transition">
+                            class="text-sm font-bold bg-gradient-to-r from-brand-500 to-brand-600 text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition">
                             Get Started
                         </a>
                     {% endif %}
+
+                    <!-- Theme Switcher Button -->
+                    <button class="theme-toggle-btn w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-brand-50 dark:hover:bg-slate-700 flex items-center justify-center transition-all cursor-pointer" title="Toggle Theme">
+                        <i class="fa-solid fa-moon text-slate-600 dark:text-slate-300 text-lg"></i>
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -214,16 +161,16 @@
     <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-lg px-4 pointer-events-none">
         {% for category, message in messages %}
         {% set is_err = (category == 'error') %}
-        <div class="p-4 rounded-2xl border {{ 'bg-rose-50 border-rose-200 text-rose-900 shadow-rose-500/10' if is_err else 'bg-teal-50 border-teal-200 text-teal-900 shadow-teal-500/10' }} flex items-start shadow-xl mb-3 animate-fade-in-up pointer-events-auto backdrop-blur-md"
+        <div class="p-4 rounded-2xl border {{ 'bg-rose-50/90 border-rose-200 text-rose-900 dark:bg-rose-950/80 dark:border-rose-900/50 dark:text-rose-200 shadow-rose-500/5' if is_err else 'bg-brand-50/90 border-brand-200 text-brand-900 dark:bg-slate-800/95 dark:border-brand-900/50 dark:text-brand-200 shadow-teal-500/5' }} flex items-start shadow-xl mb-3 animate-fade-in-up pointer-events-auto backdrop-blur-md"
             role="alert">
             <div class="flex-shrink-0 mt-0.5">
-                <i class="fa-solid {{ 'fa-circle-exclamation text-rose-500' if is_err else 'fa-circle-check text-teal-600' }} text-lg"></i>
+                <i class="fa-solid {{ 'fa-circle-exclamation text-rose-500' if is_err else 'fa-circle-check text-brand-500' }} text-lg"></i>
             </div>
             <div class="ml-3 w-0 flex-1 font-semibold text-sm leading-snug">
                 {{ message }}
             </div>
             <button onclick="this.parentElement.remove()"
-                class="ml-3 text-slate-400 hover:text-slate-600 p-1 transition rounded-lg hover:bg-white/60">
+                class="ml-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 transition rounded-lg hover:bg-white/60 dark:hover:bg-slate-700/50">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -233,40 +180,100 @@
     {% endwith %}
 
     <!-- Main Container -->
-    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-start">
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-start relative z-10">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Global Footer -->
-    <footer class="bg-white border-t border-slate-200/80 py-10 mt-auto z-10">
+    <footer class="bg-white/50 dark:bg-slate-950/40 border-t border-slate-200/50 dark:border-slate-900/50 py-10 mt-auto z-10 backdrop-blur-md no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 gradient-teal rounded-xl flex items-center justify-center text-white text-sm">
-                        <i class="fa-solid fa-heart-pulse"></i>
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white text-sm">
+                        <i class="fa-solid fa-heart-pulse text-xs text-brand-100 animate-heartbeat-slow"></i>
                     </div>
                     <div>
-                        <span class="font-extrabold text-slate-900 text-lg">HeartCare<span class="text-teal-600">.ai</span></span>
-                        <p class="text-xs text-slate-400">Random Forest Clinical Intelligence</p>
+                        <span class="font-extrabold text-slate-900 dark:text-white text-lg">HeartCare<span class="text-brand-500">.ai</span></span>
+                        <p class="text-xs text-slate-400 dark:text-slate-500">Random Forest Clinical Intelligence</p>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-6 text-sm font-semibold text-slate-500">
-                    <span class="inline-flex items-center text-xs text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full font-bold">
-                        <span class="w-2 h-2 rounded-full bg-teal-500 mr-2 animate-pulse"></span> Engine Online
+                <div class="flex items-center space-x-6 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    <span class="inline-flex items-center text-xs text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/20 border border-brand-200 dark:border-brand-900/60 px-3 py-1 rounded-full font-bold">
+                        <span class="w-2 h-2 rounded-full bg-brand-500 mr-2 animate-pulse"></span> Engine Online
                     </span>
-                    <a href="{{ url_for('admin_login') }}" class="hover:text-teal-700 transition flex items-center">
+                    <a href="{{ url_for('admin_login') }}" class="hover:text-brand-600 dark:hover:text-brand-400 transition flex items-center">
                         <i class="fa-solid fa-shield-halved mr-1.5 text-xs"></i>Admin Portal
                     </a>
                 </div>
             </div>
-            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
+            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500">
                 <p>&copy; {{ current_year | default(2026) }} HeartCare AI System. Educational AI risk tool, not a medical diagnosis.</p>
                 <p class="mt-2 sm:mt-0 font-medium">1025-Cohort Validated Random Forest</p>
             </div>
         </div>
     </footer>
 
+    <!-- Background Particle Execution Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+            
+            const particles = [];
+            const particleCount = 25;
+            
+            class Particle {
+                constructor() {
+                    this.reset();
+                    this.y = Math.random() * height;
+                }
+                
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = height + Math.random() * 20;
+                    this.size = Math.random() * 3 + 0.8;
+                    this.speedY = Math.random() * 0.35 + 0.1;
+                    this.alpha = Math.random() * 0.25 + 0.05;
+                }
+                
+                update() {
+                    this.y -= this.speedY;
+                    if (this.y < -10) this.reset();
+                }
+                
+                draw() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    ctx.fillStyle = isDark ? `rgba(20, 184, 166, ${this.alpha})` : `rgba(13, 148, 136, ${this.alpha * 0.5})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
+    </script>
 </body>
 
 </html>

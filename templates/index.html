@@ -1,158 +1,303 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="flex flex-col items-center w-full animate-fade-in-up">
+<div class="flex flex-col items-center w-full min-h-screen">
 
     <!-- Hero Section -->
     <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between my-8 lg:my-16 z-10 gap-12">
-        <!-- Hero Text content -->
+        
+        <!-- Hero Text Content -->
         <div class="w-full lg:w-1/2 text-center lg:text-left">
-            <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-extrabold tracking-widest uppercase mb-6 shadow-sm">
-                <span class="flex h-2 w-2 rounded-full bg-teal-500 mr-2 animate-pulse"></span> Machine Learning Cardiovascular Diagnostics
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-brand-50/80 dark:bg-brand-950/30 border border-brand-200/50 dark:border-brand-900/40 text-brand-700 dark:text-brand-300 text-xs font-extrabold tracking-widest uppercase mb-6 shadow-sm backdrop-blur-md animate-float">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-brand-500 mr-2.5 animate-pulse"></span> Intelligent Cardiac Diagnostics
             </div>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6">
-                Instant Clinical <span class="gradient-text">Heart Disease</span> Risk Analysis.
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.12] mb-6">
+                Next-Gen <span class="bg-gradient-to-r from-brand-500 to-teal-400 bg-clip-text text-transparent">Cardiovascular</span> AI Stratification.
             </h1>
 
-            <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 font-normal">
-                Trained on standardized clinical cardiovascular biomarkers, HeartCare.ai delivers reliable risk assessments alongside automated lifestyle and dietary protocols tailored to your vital stats.
+            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 font-normal">
+                Trained on standardized clinical biomarkers, HeartCare.ai delivers real-time risk stratification assessments paired with personalized lifestyle, nutrition, and exercise recovery protocols.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('assessment') }}"
-                    class="w-full sm:w-auto text-center gradient-teal text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-teal-700/25 hover:shadow-xl hover:-translate-y-0.5 transition flex items-center justify-center">
-                    <i class="fa-solid fa-stethoscope mr-2"></i> Launch Assessment
+                    class="w-full sm:w-auto text-center bg-gradient-to-r from-brand-500 to-brand-600 text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-brand-500/20 hover:shadow-xl hover:shadow-brand-500/30 hover:-translate-y-0.5 transition flex items-center justify-center">
+                    <i class="fa-solid fa-stethoscope mr-2 text-brand-100"></i> Start Heart Assessment
                 </a>
                 <a href="{{ url_for('dashboard') }}"
-                    class="w-full sm:w-auto text-center bg-white text-slate-700 border border-slate-200 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 transition shadow-sm">
-                    View My Records
+                    class="w-full sm:w-auto text-center bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm">
+                    View My History
                 </a>
                 {% else %}
                 <a href="{{ url_for('register') }}"
-                    class="w-full sm:w-auto text-center gradient-teal text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-teal-700/25 hover:shadow-xl hover:-translate-y-0.5 transition">
+                    class="w-full sm:w-auto text-center bg-gradient-to-r from-brand-500 to-brand-600 text-white px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-brand-500/20 hover:shadow-xl hover:-translate-y-0.5 transition">
                     Get Started Free <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
                 </a>
                 <a href="{{ url_for('login') }}"
-                    class="w-full sm:w-auto text-center bg-white text-slate-700 border border-slate-200 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 transition shadow-sm">
+                    class="w-full sm:w-auto text-center bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-7 py-4 rounded-2xl font-bold text-base hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm">
                     Sign In
                 </a>
                 {% endif %}
             </div>
 
             <!-- Key Feature Badges -->
-            <div class="mt-10 pt-8 border-t border-slate-200/60 grid grid-cols-3 gap-4 text-left">
+            <div class="mt-10 pt-8 border-t border-slate-200/50 dark:border-slate-800/60 grid grid-cols-3 gap-4 text-left">
                 <div>
-                    <div class="text-2xl font-extrabold text-slate-900">13</div>
-                    <div class="text-xs font-semibold text-slate-500">Clinical Markers</div>
+                    <div class="text-2xl font-extrabold text-slate-900 dark:text-white">13</div>
+                    <div class="text-xs font-semibold text-slate-400 dark:text-slate-500">Biomarkers</div>
                 </div>
                 <div>
-                    <div class="text-2xl font-extrabold text-teal-700">Random Forest</div>
-                    <div class="text-xs font-semibold text-slate-500">Classifier Architecture</div>
+                    <div class="text-2xl font-extrabold text-brand-500">Random Forest</div>
+                    <div class="text-xs font-semibold text-slate-400 dark:text-slate-500">Classifier Model</div>
                 </div>
                 <div>
-                    <div class="text-2xl font-extrabold text-slate-900">&lt; 1 sec</div>
-                    <div class="text-xs font-semibold text-slate-500">Inference Latency</div>
+                    <div class="text-2xl font-extrabold text-slate-900 dark:text-white">&lt; 100 ms</div>
+                    <div class="text-xs font-semibold text-slate-400 dark:text-slate-500">Inference Delay</div>
                 </div>
             </div>
         </div>
 
-        <!-- Hero Graphic / Interactive Card Preview -->
+        <!-- Hero Graphic (3D heart canvas + floating clinical indicators) -->
         <div class="w-full lg:w-1/2 flex justify-center items-center relative">
-            <!-- Glow background -->
-            <div class="absolute w-80 h-80 bg-teal-400/20 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
-            <div class="absolute w-60 h-60 bg-sky-400/20 rounded-full blur-3xl -z-10 right-4 bottom-4"></div>
+            <div class="absolute w-80 h-80 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-3xl -z-10 animate-pulse-glow"></div>
+            <div class="absolute w-60 h-60 bg-sky-500/10 dark:bg-sky-500/15 rounded-full blur-3xl -z-10 right-4 bottom-4"></div>
 
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl w-full max-w-md border border-white/90 shadow-2xl relative">
-                <div class="flex items-center justify-between pb-6 border-b border-slate-100">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl w-full max-w-md relative overflow-hidden flex flex-col items-center">
+                <!-- 3D Heart Container -->
+                <div id="three-heart-container" class="w-full h-64 relative flex items-center justify-center">
+                    <!-- Overlay SVG ECG Waveform -->
+                    <canvas id="ecg-canvas" class="absolute inset-0 pointer-events-none w-full h-full"></canvas>
+                </div>
+
+                <div class="flex items-center justify-between w-full pb-4 border-b border-slate-100 dark:border-slate-800">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl gradient-teal flex items-center justify-center text-white">
-                            <i class="fa-solid fa-heart-pulse"></i>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white shadow-md">
+                            <i class="fa-solid fa-heart-circle-bolt text-lg text-teal-100"></i>
                         </div>
                         <div>
-                            <h3 class="font-extrabold text-slate-900 text-sm">Sample Clinical Assessment</h3>
-                            <p class="text-[11px] text-slate-400 font-medium">Standardized 14-Feature Model</p>
+                            <h3 class="font-extrabold text-slate-900 dark:text-white text-sm">Interactive AI Core</h3>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold tracking-wide uppercase">Realtime Diagnostics Preview</p>
                         </div>
                     </div>
-                    <span class="px-2.5 py-1 text-[11px] font-bold bg-teal-50 text-teal-700 rounded-lg border border-teal-200">
-                        Live Preview
+                    <span class="px-2.5 py-1 text-[10px] font-bold bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 rounded-lg border border-brand-200/50 dark:border-brand-900/40 uppercase tracking-wider">
+                        Online
                     </span>
                 </div>
 
-                <div class="py-6 space-y-4">
-                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-slate-500"><i class="fa-solid fa-user-doctor mr-2 text-teal-600"></i>Age & Biological Sex</span>
-                        <span class="text-slate-800 font-bold">55 Yrs / Male</span>
+                <!-- Mini Clinical Vitals Monitor -->
+                <div class="w-full py-4 space-y-3">
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/80">
+                        <span class="text-slate-500 dark:text-slate-400"><i class="fa-solid fa-user-md mr-2 text-brand-500"></i>Demographics</span>
+                        <span class="text-slate-800 dark:text-slate-200 font-bold">58 Years / Male</span>
                     </div>
-                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-slate-500"><i class="fa-solid fa-gauge mr-2 text-teal-600"></i>Resting BP / Serum Chol</span>
-                        <span class="text-slate-800 font-bold">140 mm Hg / 260 mg/dl</span>
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/80">
+                        <span class="text-slate-500 dark:text-slate-400"><i class="fa-solid fa-gauge mr-2 text-brand-500"></i>Vitals (trestbps/chol)</span>
+                        <span class="text-slate-800 dark:text-slate-200 font-bold">142 mm Hg / 245 mg/dl</span>
                     </div>
-                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-slate-500"><i class="fa-solid fa-wave-square mr-2 text-teal-600"></i>Max Heart Rate (thalach)</span>
-                        <span class="text-slate-800 font-bold">145 bpm</span>
-                    </div>
-                </div>
-
-                <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs font-extrabold text-teal-950">Evidence-Based Risk Stratification</div>
-                            <div class="text-[11px] text-teal-700">Immediate Personalized Lifestyle Protocol</div>
-                        </div>
+                    <div class="flex items-center justify-between text-xs font-semibold p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/80">
+                        <span class="text-slate-500 dark:text-slate-400"><i class="fa-solid fa-wave-square mr-2 text-brand-500"></i>Stress Max HR (thalach)</span>
+                        <span class="text-slate-800 dark:text-slate-200 font-bold text-rose-500 dark:text-rose-400">110 bpm</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Core Features Grid -->
-    <div class="w-full mt-16 pt-12 border-t border-slate-200/80">
+    <!-- 13 Clinical Indicators Section -->
+    <div class="w-full mt-16 pt-12 border-t border-slate-200/50 dark:border-slate-800/60">
         <div class="text-center max-w-2xl mx-auto mb-12">
-            <span class="text-xs font-extrabold tracking-widest uppercase text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">Core Capabilities</span>
-            <h2 class="text-3xl font-black text-slate-900 mt-3">Comprehensive Cardiac AI Screening</h2>
-            <p class="text-sm text-slate-500 mt-2">Engineered to evaluate 13 validated cardiovascular indicators with reproducible random forest classification.</p>
+            <span class="text-xs font-extrabold tracking-widest uppercase text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40 px-3.5 py-1.5 rounded-full border border-brand-100 dark:border-brand-900/60">Biomarker Grid</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-4">13 Core Cardiovascular Indicators</h2>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-2">Every assessment evaluates the exact 13 biological metrics required by the machine learning algorithm to estimate risk levels.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <!-- Feature 1 -->
-            <div class="glass-panel p-8 rounded-3xl">
-                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center text-xl mb-6 border border-teal-100">
-                    <i class="fa-solid fa-microchip"></i>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <!-- Indicator 1 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-calendar-day"></i>
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">Random Forest Ensemble</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">
-                    Utilizes an ensemble of decision trees trained on the 1,025-patient cohort with stratified cross-validation for robust generalizability.
-                </p>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Age</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Patient age in years (primary correlation factor).</p>
             </div>
-
-            <!-- Feature 2 -->
-            <div class="glass-panel p-8 rounded-3xl">
-                <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-700 flex items-center justify-center text-xl mb-6 border border-sky-100">
-                    <i class="fa-solid fa-utensils"></i>
+            <!-- Indicator 2 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-venus-mars"></i>
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">Lifestyle Protocol Engine</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">
-                    Translates probability scores and patient markers into clear, category-specific lifestyle, nutrition, sleep, and exercise recommendations.
-                </p>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Sex</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Biological sex mapping (clinical classification).</p>
             </div>
-
-            <!-- Feature 3 -->
-            <div class="glass-panel p-8 rounded-3xl">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-xl mb-6 border border-indigo-100">
-                    <i class="fa-solid fa-shield-heart"></i>
+            <!-- Indicator 3 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-heart-circle-exclamation"></i>
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">Clinical Audit Trail</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">
-                    Every assessment is timestamped and safely archived for patient history tracking and longitudinal cardiovascular monitoring.
-                </p>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Chest Pain (cp)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Typical, atypical, non-anginal, or asymptomatic type.</p>
+            </div>
+            <!-- Indicator 4 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-gauge"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Resting BP (trestbps)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Systolic pressure measured in mm Hg upon admission.</p>
+            </div>
+            <!-- Indicator 5 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Cholesterol (chol)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Serum cholesterol concentration in mg/dl.</p>
+            </div>
+            <!-- Indicator 6 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Fasting Sugar (fbs)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Elevated glycemic markers (>120 mg/dl).</p>
+            </div>
+            <!-- Indicator 7 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-wave-square"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Resting ECG (restecg)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Electrocardiographic baseline results.</p>
+            </div>
+            <!-- Indicator 8 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-person-running"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Max HR (thalach)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Peak heart rate reached during stress treadmill test.</p>
+            </div>
+            <!-- Indicator 9 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-person-walking-arrow-right"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Angina (exang)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Exercise-induced angina status (yes/no).</p>
+            </div>
+            <!-- Indicator 10 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Oldpeak</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">ST segment depression relative to rest state.</p>
+            </div>
+            <!-- Indicator 11 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-chart-area"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">ST Slope</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Slope of peak exercise ST segment.</p>
+            </div>
+            <!-- Indicator 12 -->
+            <div class="glass-panel p-6 rounded-3xl glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Fluoroscopy (ca)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Number of major vessels colored (0-4).</p>
+            </div>
+            <!-- Indicator 13 -->
+            <div class="glass-panel p-6 rounded-3xl lg:col-span-2 glass-panel-hover">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg mb-4">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1">Thal Defect</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Reversible defect, fixed defect, or normal flow category.</p>
             </div>
         </div>
     </div>
-
 </div>
+
+<!-- Three.js 3D glowing heart loading & ECG waveform generator -->
+<script src="{{ url_for('static', filename='js/three_heart.js') }}"></script>
+<script>
+    // Live ECG Waveform Drawer on Canvas
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('ecg-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = canvas.parentElement.clientWidth;
+        let height = canvas.height = canvas.parentElement.clientHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = canvas.parentElement.clientWidth;
+            height = canvas.height = canvas.parentElement.clientHeight;
+        });
+
+        let x = 0;
+        const points = [];
+        
+        function getECGPoint(currentX) {
+            // Generates standard heart cycle pulses (P, Q, R, S, T segments)
+            const phase = (currentX % 150) / 150; // Repeat cycle every 150 pixels
+            const mid = height / 2;
+            
+            if (phase > 0.3 && phase < 0.33) {
+                // P-wave
+                return mid - Math.sin((phase - 0.3) / 0.03 * Math.PI) * 6;
+            } else if (phase >= 0.33 && phase < 0.35) {
+                // PR segment (flat)
+                return mid;
+            } else if (phase >= 0.35 && phase < 0.37) {
+                // Q-wave (small dip)
+                return mid + (phase - 0.35) / 0.02 * 6;
+            } else if (phase >= 0.37 && phase < 0.40) {
+                // R-wave peak (high spike)
+                return mid - 40 * Math.sin((phase - 0.37) / 0.03 * Math.PI);
+            } else if (phase >= 0.40 && phase < 0.43) {
+                // S-wave (deep dip)
+                return mid + 12 * Math.sin((phase - 0.40) / 0.03 * Math.PI);
+            } else if (phase >= 0.43 && phase < 0.48) {
+                // ST segment flat
+                return mid;
+            } else if (phase >= 0.48 && phase < 0.55) {
+                // T-wave
+                return mid - Math.sin((phase - 0.48) / 0.07 * Math.PI) * 10;
+            }
+            return mid;
+        }
+
+        function drawECG() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            ctx.strokeStyle = isDark ? 'rgba(20, 184, 166, 0.25)' : 'rgba(13, 148, 136, 0.15)';
+            ctx.lineWidth = 2.5;
+            ctx.shadowBlur = isDark ? 8 : 2;
+            ctx.shadowColor = isDark ? '#14b8a6' : '#0d9488';
+            
+            ctx.beginPath();
+            
+            // Advance x coordinate
+            x = (x + 2) % width;
+            
+            for (let i = 0; i < width; i++) {
+                const y = getECGPoint(i + x);
+                if (i === 0) {
+                    ctx.moveTo(i, y);
+                } else {
+                    ctx.lineTo(i, y);
+                }
+            }
+            ctx.stroke();
+            requestAnimationFrame(drawECG);
+        }
+
+        drawECG();
+    });
+</script>
 {% endblock %}

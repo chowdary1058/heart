@@ -1,0 +1,178 @@
+/* Premium HeartCare.ai Stylesheet */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: rgba(226, 232, 240, 0.8);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glow-color: rgba(20, 184, 166, 0.08);
+    --card-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+    --card-shadow-hover: 0 20px 40px -15px rgba(20, 184, 166, 0.12), 0 1px 5px rgba(20, 184, 166, 0.05);
+    --teal-gradient: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    --accent-glow: 0 0 20px rgba(20, 184, 166, 0.2);
+}
+
+.dark {
+    --bg-primary: #090d16;
+    --bg-secondary: #111827;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: rgba(30, 41, 59, 0.8);
+    --glass-bg: rgba(17, 24, 39, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glow-color: rgba(20, 184, 166, 0.25);
+    --card-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+    --card-shadow-hover: 0 25px 45px -15px rgba(20, 184, 166, 0.25), 0 0 20px rgba(20, 184, 166, 0.1);
+    --teal-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    --accent-glow: 0 0 30px rgba(20, 184, 166, 0.4);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+    box-shadow: var(--card-shadow-hover);
+    border-color: rgba(20, 184, 166, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Theme Switcher Button Glow */
+.theme-toggle-btn {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.theme-toggle-btn:active {
+    transform: scale(0.92);
+}
+
+/* Particle Background Setup */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+/* Custom 3D card tilt wrapper */
+.tilt-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.tilt-inner {
+    transform: translateZ(20px);
+}
+
+/* Animations */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.1); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes ecg-line {
+    0% { stroke-dashoffset: 1000; }
+    100% { stroke-dashoffset: 0; }
+}
+
+@keyframes float-ambient {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.animate-heartbeat-slow {
+    animation: heartbeat 2.5s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.animate-float {
+    animation: float-ambient 6s infinite ease-in-out;
+}
+
+/* Clinical Inputs Styling */
+.input-clinical-custom {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-clinical-custom:focus {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+    outline: none;
+}
+
+/* Step Wizard Progress */
+.wizard-step {
+    transition: all 0.3s ease;
+}
+.wizard-step.active {
+    color: #0d9488;
+}
+
+/* SVG Gauge Styling */
+.gauge-track {
+    stroke: var(--border-color);
+}
+.gauge-fill {
+    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading Overlay Animation */
+.loading-overlay {
+    background: rgba(9, 13, 22, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+/* Print CSS overrides */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    nav, footer, .no-print, .theme-toggle-btn {
+        display: none !important;
+    }
+    .glass-panel {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+    .gauge-container {
+        page-break-inside: avoid;
+    }
+}

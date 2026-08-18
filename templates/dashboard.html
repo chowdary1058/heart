@@ -4,78 +4,100 @@
 <div class="w-full animate-fade-in-up py-4">
 
     <!-- Welcome Hero Banner -->
-    <div class="relative w-full rounded-3xl overflow-hidden glass-panel border border-white/80 p-8 sm:p-12 mb-10 group">
-        <div class="absolute inset-0 gradient-teal opacity-95"></div>
+    <div class="relative w-full rounded-3xl overflow-hidden glass-panel border border-slate-200/50 dark:border-slate-800/50 p-8 sm:p-12 mb-10 group">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-800 opacity-95 dark:opacity-90"></div>
         <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3"></div>
 
         <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div class="text-white max-w-xl">
-                <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 text-teal-100 text-xs font-bold uppercase tracking-widest mb-3 backdrop-blur-sm">
-                    <i class="fa-solid fa-heart-pulse mr-2 text-teal-300"></i> Patient Health Portal
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/20 text-teal-100 text-xs font-bold uppercase tracking-wider mb-3 backdrop-blur-sm">
+                    <i class="fa-solid fa-heart-pulse mr-2 text-teal-300 animate-pulse"></i> Patient Health Command Center
                 </span>
                 <h1 class="text-3xl sm:text-4xl font-black tracking-tight mb-2">Welcome, {{ current_user.username }}</h1>
-                <p class="text-teal-100 text-sm sm:text-base leading-relaxed">
-                    Track your historical cardiac assessments, risk progression, and tailored lifestyle protocols.
+                <p class="text-teal-100/90 text-sm sm:text-base leading-relaxed font-medium">
+                    Monitor historical cardiovascular assessments, track risk variations, and review personalized preventative strategies.
                 </p>
             </div>
             <div>
                 <a href="{{ url_for('assessment') }}"
-                    class="bg-white text-teal-900 font-extrabold px-7 py-3.5 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-teal-50 transform hover:-translate-y-0.5 transition flex items-center text-sm sm:text-base whitespace-nowrap">
-                    <i class="fa-solid fa-stethoscope mr-2 text-teal-600"></i> New Assessment
+                    class="bg-white hover:bg-brand-50 text-brand-900 font-extrabold px-7 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-brand-900/10 transform hover:-translate-y-0.5 transition flex items-center text-sm sm:text-base whitespace-nowrap border border-white/50">
+                    <i class="fa-solid fa-stethoscope mr-2 text-brand-600 text-lg"></i> Run New Assessment
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Clinical Overview Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-        <!-- Total Assessments -->
-        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Assessments</span>
-                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-file-medical"></i>
+    <!-- Clinical Overview Stats & Latest Gauge -->
+    {% set latest = records[0] if records else None %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+        
+        <!-- Total Assessments Card -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between border border-slate-200/50 dark:border-slate-800/50">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Assessment Records</span>
+                    <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
                 </div>
+                <div class="text-5xl font-black text-slate-900 dark:text-white">{{ records|length }}</div>
             </div>
-            <div class="text-4xl font-black text-slate-900">{{ records|length }}</div>
-            <p class="text-xs text-slate-400 mt-2 font-medium">Historical records saved in database</p>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mt-4 font-semibold">Longitudinal assessments logged securely in dataset archive.</p>
         </div>
 
-        {% set latest = records[0] if records else None %}
-
-        <!-- Latest Assessment Status -->
-        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden sm:col-span-2">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <div class="flex items-center space-x-2 mb-2">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Latest Screening Status</span>
+        <!-- Latest Assessment Status & SVG Gauge -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden lg:col-span-2 border border-slate-200/50 dark:border-slate-800/50">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-8">
+                
+                <!-- Risk Level Text details -->
+                <div class="flex-1 w-full text-center sm:text-left">
+                    <div class="flex items-center justify-center sm:justify-start space-x-2.5 mb-3">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Latest Screening Status</span>
                         {% if latest and latest.timestamp %}
-                        <span class="px-2 py-0.5 text-[10px] font-extrabold bg-slate-100 text-slate-600 rounded-md">
-                            {{ latest.timestamp.strftime('%b %d, %Y') }}
+                        <span class="px-2.5 py-0.5 text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-md">
+                            {{ latest.timestamp.strftime('%B %d, %Y') }}
                         </span>
                         {% endif %}
                     </div>
 
                     {% if latest %}
-                    <h3 class="text-2xl font-black {{ 'text-rose-600' if latest.prediction_label == 'Heart Disease Warning' else 'text-emerald-600' }} mb-1">
+                    {% set is_warning = (latest.prediction_label == 'Heart Disease Warning') %}
+                    <h3 class="text-2xl font-black {{ 'text-rose-600 dark:text-rose-400' if is_warning else 'text-emerald-600 dark:text-emerald-400' }} mb-2">
                         {{ latest.prediction_label }}
                     </h3>
-                    <p class="text-xs text-slate-500 font-medium">Risk Level: <strong class="text-slate-800">{{ latest.risk_level }}</strong></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold mb-4">Risk Severity: <strong class="text-slate-800 dark:text-slate-200">{{ latest.risk_level }}</strong></p>
+                    
+                    <a href="{{ url_for('result', rec_id=latest.id) }}" class="inline-flex items-center px-4 py-2 bg-brand-500/10 hover:bg-brand-500/20 text-brand-700 dark:text-brand-300 text-xs font-bold rounded-xl transition">
+                        View Assessment Report <i class="fa-solid fa-arrow-right ml-1.5 text-[9px]"></i>
+                    </a>
                     {% else %}
-                    <h3 class="text-xl font-bold text-slate-400">No Assessments Yet</h3>
-                    <p class="text-xs text-slate-400 mt-1">Complete your first clinical assessment to view AI risk metrics.</p>
+                    <h3 class="text-xl font-bold text-slate-400 dark:text-slate-500">No Assessment Run Yet</h3>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium">Please proceed to click "Run New Assessment" to stratify cardiac risk indicators.</p>
                     {% endif %}
                 </div>
 
+                <!-- Circular SVG Gauge -->
                 {% if latest %}
-                <div class="sm:text-right">
-                    <span class="text-3xl font-black {{ 'text-rose-600' if latest.risk_level == 'Higher Risk' else ('text-amber-500' if latest.risk_level == 'Moderate Risk' else 'text-emerald-600') }}">
-                        {{ latest.disease_probability }}<span class="text-base text-slate-400 font-semibold">%</span>
-                    </span>
-                    <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Calculated Probability</span>
-                    <a href="{{ url_for('result', rec_id=latest.id) }}" class="inline-flex items-center text-xs font-bold text-teal-700 hover:text-teal-900 mt-2">
-                        View Full Protocol <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
-                    </a>
+                <div class="flex flex-col items-center flex-shrink-0">
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <!-- Track Circle -->
+                            <circle cx="64" cy="64" r="54" stroke-width="8" fill="transparent" class="gauge-track stroke-slate-100 dark:stroke-slate-800" />
+                            <!-- Fill Circle -->
+                            {% set pct = latest.disease_probability %}
+                            {% set stroke_color = 'stroke-rose-500' if latest.risk_level == 'Higher Risk' else ('stroke-amber-500' if latest.risk_level == 'Moderate Risk' else 'stroke-emerald-500') %}
+                            <!-- Circumference = 2 * pi * r = 2 * 3.14159 * 54 = 339.292 -->
+                            <circle cx="64" cy="64" r="54" stroke-width="8" fill="transparent" 
+                                    class="gauge-fill {{ stroke_color }}"
+                                    stroke-dasharray="339.3"
+                                    stroke-dashoffset="{{ 339.3 - (339.3 * pct / 100) }}"
+                                    stroke-linecap="round" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-black text-slate-900 dark:text-white leading-none">{{ latest.disease_probability }}%</span>
+                            <span class="text-[8px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Disease Prob</span>
+                        </div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
@@ -85,53 +107,53 @@
     <!-- Assessment History Table -->
     <div class="flex items-center justify-between mb-4">
         <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-clock-rotate-left text-teal-600 text-sm"></i>
-            <h3 class="text-base font-extrabold text-slate-900 tracking-tight uppercase tracking-wider text-xs">Screening History</h3>
+            <i class="fa-solid fa-clock-rotate-left text-brand-500 text-sm"></i>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-widest uppercase">Screening History</h3>
         </div>
-        <span class="text-xs font-semibold text-slate-400">{{ records|length }} total logs</span>
+        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">{{ records|length }} assessments run</span>
     </div>
 
-    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm">
+    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-800/60 shadow-md">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-100 text-left text-sm">
-                <thead class="bg-slate-50/80">
+            <table class="min-w-full divide-y divide-slate-100 dark:divide-slate-800 text-left text-sm">
+                <thead class="bg-slate-50/50 dark:bg-slate-800/20">
                     <tr>
-                        <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Date & Time</th>
-                        <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Prediction Outcome</th>
-                        <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider">Risk Level & Probability</th>
-                        <th class="px-6 py-4 font-bold text-xs text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                        <th class="px-6 py-4 font-extrabold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">Date & Time</th>
+                        <th class="px-6 py-4 font-extrabold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">ML Prediction Outcome</th>
+                        <th class="px-6 py-4 font-extrabold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">Risk Level & Probability</th>
+                        <th class="px-6 py-4 font-extrabold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 bg-white/70">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-transparent">
                     {% for record in records %}
                     {% set is_danger = (record.prediction_label == 'Heart Disease Warning') %}
-                    <tr class="hover:bg-teal-50/40 transition-colors">
+                    <tr class="hover:bg-brand-50/20 dark:hover:bg-slate-800/10 transition-colors">
                         <td class="px-6 py-4.5 whitespace-nowrap">
-                            <div class="font-bold text-slate-900">{{ record.timestamp.strftime('%B %d, %Y') if record.timestamp else 'Recently Logged' }}</div>
-                            <div class="text-xs text-slate-400">{{ record.timestamp.strftime('%I:%M %p') if record.timestamp else '' }}</div>
+                            <div class="font-bold text-slate-900 dark:text-white">{{ record.timestamp.strftime('%B %d, %Y') if record.timestamp else 'Recently Logged' }}</div>
+                            <div class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ record.timestamp.strftime('%I:%M %p') if record.timestamp else '' }}</div>
                         </td>
                         <td class="px-6 py-4.5 whitespace-nowrap">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold {{ 'bg-rose-50 text-rose-700 border border-rose-200' if is_danger else 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
-                                <i class="fa-solid {{ 'fa-circle-exclamation mr-1.5 text-rose-500' if is_danger else 'fa-circle-check mr-1.5 text-emerald-500' }}"></i>
+                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-extrabold {{ 'bg-rose-50/90 text-rose-700 border border-rose-200/50 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/40' if is_danger else 'bg-emerald-50/90 text-emerald-700 border border-emerald-200/50 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/40' }}">
+                                <i class="fa-solid {{ 'fa-circle-exclamation mr-2 text-rose-500' if is_danger else 'fa-circle-check mr-2 text-emerald-500' }}"></i>
                                 {{ record.prediction_label }}
                             </span>
                         </td>
                         <td class="px-6 py-4.5 whitespace-nowrap">
-                            <div class="font-bold text-slate-800">{{ record.risk_level }}</div>
-                            <div class="text-xs font-semibold text-slate-500">{{ record.disease_probability }}% probability</div>
+                            <div class="font-bold text-slate-800 dark:text-slate-200">{{ record.risk_level }}</div>
+                            <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-0.5">{{ record.disease_probability }}% probability</div>
                         </td>
                         <td class="px-6 py-4.5 whitespace-nowrap text-right">
                             <a href="{{ url_for('result', rec_id=record.id) }}"
-                                class="inline-flex items-center px-3.5 py-1.5 rounded-xl font-bold text-xs text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition shadow-sm">
-                                View Report <i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-[10px]"></i>
+                                class="inline-flex items-center px-4 py-2 rounded-xl font-bold text-xs text-brand-800 bg-brand-50 hover:bg-brand-100 dark:text-brand-300 dark:bg-brand-950/30 dark:hover:bg-brand-950/50 border border-brand-200/40 dark:border-brand-900/30 transition shadow-sm">
+                                View Report <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-[10px]"></i>
                             </a>
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="4" class="px-6 py-12 text-center text-slate-400">
-                            <i class="fa-solid fa-folder-open text-3xl text-slate-300 mb-3 block"></i>
-                            No clinical records found. Click <strong>New Assessment</strong> to begin.
+                        <td colspan="4" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
+                            <i class="fa-solid fa-folder-open text-4xl text-slate-300 dark:text-slate-700 mb-4 block"></i>
+                            No clinical records found. Click <strong class="text-brand-500">Run Assessment</strong> to begin.
                         </td>
                     </tr>
                     {% endfor %}
